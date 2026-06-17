@@ -35,6 +35,7 @@
             transition: color 0.5s ease; position: relative;
         }
         body.light-mode { background: #ede9fe; }
+        body.modal-lock { overflow: hidden; }
 
         /* BACKGROUND */
         .bg-scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
@@ -54,6 +55,9 @@
             25%      { transform:translate(40px,-30px) scale(1.04); }
             50%      { transform:translate(-20px,40px) scale(0.96); }
             75%      { transform:translate(-40px,-20px) scale(1.02); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .orb, .fci, .timeline-item, .ciw { animation: none !important; transition: none !important; }
         }
         .bg-grain {
             position:fixed;inset:0;z-index:1;opacity:0.04;pointer-events:none;
@@ -142,9 +146,9 @@
             content:'';position:absolute;bottom:-1px;left:0;width:0;height:1px;
             background:linear-gradient(90deg,var(--orb-1),var(--orb-2));transition:width 0.4s ease;
         }
-        nav a:hover { color:rgba(255,255,255,0.92);padding-left:10px; }
-        body.light-mode nav a:hover { color:rgba(30,20,60,0.95); }
-        nav a:hover::after { width:100%; }
+        nav a:hover, nav a:focus-visible { color:rgba(255,255,255,0.92);padding-left:10px; }
+        body.light-mode nav a:hover, body.light-mode nav a:focus-visible { color:rgba(30,20,60,0.95); }
+        nav a:hover::after, nav a:focus-visible::after { width:100%; }
         .nav-num {
             font-family:'DM Sans',sans-serif;font-size:0.58rem;font-weight:400;
             letter-spacing:0.18em;color:rgba(167,139,250,0.5);min-width:22px;flex-shrink:0;margin-top:2px;
@@ -154,6 +158,12 @@
             letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.25);
         }
         body.light-mode .nav-footer { color:rgba(60,40,120,0.35); }
+
+        a:focus-visible, button:focus-visible, input:focus-visible {
+            outline: 2px solid rgba(167,139,250,.85);
+            outline-offset: 3px;
+            border-radius: 8px;
+        }
 
         /* MAIN */
         main { margin-top: 100px; padding: 40px 20px 80px; position: relative; z-index: 2; }
@@ -170,7 +180,7 @@
             -webkit-backdrop-filter: var(--blur);
             box-shadow: 0 40px 80px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
             position: relative; overflow: hidden;
-            margin-bottom: 50px;
+            margin-bottom: 36px;
             animation: reveal 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.1s both;
         }
         .page-header::before {
@@ -190,6 +200,34 @@
         }
         .page-header p {
             font-size: 1rem; color: var(--text-muted); font-style: italic;
+        }
+
+        /* QUICK NAV ANCHORS */
+        .quicknav {
+            display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+            margin-bottom: 36px;
+            animation: reveal 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
+        }
+        .quicknav a {
+            display: flex; align-items: center; gap: 9px;
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            color: var(--text-muted); text-decoration: none;
+            padding: 11px 20px; border-radius: 99px;
+            font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700;
+            letter-spacing: 0.02em;
+            backdrop-filter: var(--blur);
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .quicknav a .qn-dot {
+            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+            background: var(--qn-color, rgba(167,139,250,.85));
+            box-shadow: 0 0 8px var(--qn-color, rgba(167,139,250,.85));
+        }
+        .quicknav a:hover, .quicknav a:focus-visible {
+            color: var(--text); border-color: var(--qn-color, rgba(167,139,250,.5));
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(0,0,0,0.25);
         }
 
         /* PROGRESS */
@@ -231,6 +269,7 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.08);
             transition: all 0.3s ease; position: relative;
             animation: reveal 0.9s cubic-bezier(0.34,1.56,0.64,1) both;
+            scroll-margin-top: 110px;
         }
         .timeline-item:nth-child(1) { animation-delay: 0.15s; }
         .timeline-item:nth-child(2) { animation-delay: 0.3s; }
@@ -243,6 +282,10 @@
             transform: translateY(-8px);
             border-color: rgba(167,139,250,0.4);
             box-shadow: 0 30px 70px rgba(167,139,250,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .timeline-item.flash {
+            border-color: var(--diploma-color, rgba(167,139,250,.7));
+            box-shadow: 0 0 0 4px var(--diploma-glow, rgba(167,139,250,.25)), 0 30px 70px rgba(167,139,250,0.2);
         }
 
         /* TIMELINE HEADER */
@@ -292,6 +335,10 @@
             background: linear-gradient(to bottom, var(--orb-1), var(--orb-2));
             border-radius: 2px;
         }
+        .section-title .sec-count {
+            font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.74rem;
+            color: var(--text-muted); margin-left: auto; letter-spacing: 0;
+        }
 
         .description {
             color: var(--text-muted); line-height: 1.75; font-size: 0.9rem;
@@ -329,6 +376,150 @@
             color: var(--text); transform: translateY(-2px);
         }
 
+        /* ═══════════════════════════════
+           DOCUMENTS — mini flip cards
+        ═══════════════════════════════ */
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+            gap: 12px;
+        }
+        .doc-card {
+            height: 158px;
+            cursor: pointer;
+            perspective: 1000px;
+            outline: none;
+        }
+        .doc-fci {
+            position: relative; width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            transition: transform .6s cubic-bezier(.4,.2,.2,1);
+        }
+        .doc-card.open .doc-fci { transform: rotateY(180deg); }
+        .doc-f, .doc-b {
+            position: absolute; inset: 0; border-radius: 14px;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+        }
+        .doc-f {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 12px 8px; gap: 8px;
+            box-shadow: 0 12px 30px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.08);
+            transition: border-color .25s, box-shadow .25s;
+        }
+        .doc-card:hover .doc-f, .doc-card:focus-visible .doc-f {
+            border-color: rgba(255,255,255,.32);
+            box-shadow: 0 18px 44px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.12);
+        }
+        .doc-type {
+            position: absolute; top: 7px; left: 7px;
+            font-size: .52rem; letter-spacing: .06em; text-transform: uppercase;
+            padding: 2px 6px; border-radius: 20px; font-weight: 700;
+            background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14);
+            color: var(--text-muted);
+        }
+        .doc-icon {
+            width: 46px; height: 46px; border-radius: 13px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+            box-shadow: 0 6px 16px rgba(0,0,0,.25);
+            transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+        }
+        .doc-card:hover .doc-icon { transform: translateY(-4px) scale(1.06); }
+        .doc-label {
+            font-family: 'Syne', sans-serif; font-size: .72rem; font-weight: 700;
+            color: var(--text); text-align: center; line-height: 1.25;
+        }
+        .doc-b {
+            background: rgba(10,6,30,.97);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            transform: rotateY(180deg);
+            display: flex; flex-direction: column;
+            padding: 11px; overflow: hidden;
+        }
+        body.light-mode .doc-b { background: rgba(237,233,254,.97); }
+        .doc-bh {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 6px; padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255,255,255,.08); flex-shrink: 0;
+        }
+        .doc-bn {
+            font-family: 'Syne', sans-serif; font-size: .58rem; font-weight: 700;
+            color: rgba(167,139,250,.9); letter-spacing: .06em; text-transform: uppercase;
+            flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .doc-bx {
+            width: 20px; height: 20px; border-radius: 6px; border: none; cursor: pointer;
+            background: rgba(255,255,255,.08); color: var(--text-muted); font-size: .68rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: all .2s; flex-shrink: 0; margin-left: 5px;
+        }
+        .doc-bx:hover, .doc-bx:focus-visible { background: rgba(255,100,130,.2); color: #ff6080; }
+        .doc-bd {
+            font-size: .66rem; color: var(--text-muted); line-height: 1.4;
+            flex: 1; overflow-y: auto; margin-bottom: 7px;
+            scrollbar-width: thin; scrollbar-color: rgba(167,139,250,.2) transparent;
+        }
+        .doc-bactions { display: flex; gap: 5px; flex-shrink: 0; }
+        .doc-cta, .doc-preview {
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+            padding: 6px 5px; border-radius: 8px; text-decoration: none;
+            font-family: 'Syne', sans-serif; font-size: .56rem; font-weight: 700;
+            letter-spacing: .03em; text-transform: uppercase;
+            transition: all .2s; flex: 1; border: 1px solid rgba(167,139,250,.5); cursor: pointer;
+        }
+        .doc-cta { background: linear-gradient(135deg, rgba(167,139,250,.3), rgba(103,232,249,.2)); color: #fff; }
+        .doc-cta:hover { background: linear-gradient(135deg, rgba(167,139,250,.5), rgba(103,232,249,.35)); transform: translateY(-1px); }
+        .doc-preview { background: rgba(255,255,255,.05); color: var(--text); }
+        .doc-preview:hover { background: rgba(255,255,255,.12); transform: translateY(-1px); }
+
+        /* Add-doc placeholder card — invites filling in a real file later */
+        .doc-card.is-empty .doc-f {
+            border-style: dashed;
+            opacity: .55;
+            justify-content: center;
+        }
+        .doc-card.is-empty .doc-icon { background: transparent; border-style: dashed; }
+        .doc-card.is-empty { cursor: default; }
+
+        .docs-empty-msg {
+            font-size: .82rem; color: var(--text-muted); font-style: italic;
+            padding: 14px 4px;
+        }
+
+        /* ═══════════════════════════════
+           MODAL — aperçu document
+        ═══════════════════════════════ */
+        .modal-overlay { position:fixed;inset:0;z-index:2000;background:rgba(5,3,12,.78);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s;display:flex;align-items:center;justify-content:center;padding:24px; }
+        .modal-overlay.show { opacity:1;pointer-events:auto; }
+        .modal-box { width:min(880px,100%);height:min(82vh,820px);background:rgba(13,8,24,.97);border:1px solid var(--glass-border);border-radius:22px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.5);transform:translateY(24px) scale(.97);transition:transform .35s cubic-bezier(.34,1.56,.64,1); }
+        .modal-overlay.show .modal-box { transform:translateY(0) scale(1); }
+        body.light-mode .modal-box { background:rgba(248,246,255,.98); }
+        .modal-head { display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--glass-border);flex-shrink:0;gap:14px; }
+        .modal-title-wrap { display:flex;flex-direction:column;gap:2px;min-width:0; }
+        .modal-title { font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+        .modal-sub { font-size:.72rem;color:var(--text-muted); }
+        .modal-head-actions { display:flex;gap:8px;flex-shrink:0; }
+        .modal-open-new, .modal-close {
+            display:flex;align-items:center;justify-content:center;gap:6px;
+            background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+            color:var(--text);border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;
+            font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+            text-decoration:none;padding:9px 14px;transition:background .2s,color .2s;
+        }
+        .modal-close { width:36px;padding:9px; }
+        .modal-open-new:hover { background:rgba(167,139,250,.22);border-color:rgba(167,139,250,.5); }
+        .modal-close:hover { background:rgba(255,100,130,.2);color:#ff6080;border-color:rgba(255,100,130,.3); }
+        .modal-body { flex:1;position:relative;background:rgba(0,0,0,.25); }
+        .modal-body iframe { width:100%;height:100%;border:none;background:#fff; }
+        .modal-fallback { position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center; }
+        .modal-fallback.show { display:flex; }
+        .modal-fallback-emoji { font-size:2rem; }
+        .modal-fallback p { font-size:.85rem;color:var(--text-muted);max-width:360px; }
+
         /* RESPONSIVE */
         @media (max-width: 768px) {
             header { padding: 20px 20px; }
@@ -341,6 +532,12 @@
             .timeline-content { padding: 20px; }
             .timeline-header { padding: 22px 20px; }
             .progress-labels { font-size: 0.7rem; gap: 4px; flex-wrap: wrap; }
+            .quicknav { gap: 8px; }
+            .quicknav a { padding: 9px 15px; font-size: .76rem; }
+            .docs-grid { grid-template-columns: repeat(auto-fill, minmax(108px, 1fr)); gap: 9px; }
+            .doc-card { height: 142px; }
+            .modal-box { height: 88vh; border-radius: 18px; }
+            .modal-title { font-size: .88rem; }
         }
     </style>
 </head>
@@ -393,6 +590,13 @@
                 <p>Une évolution constante vers l'excellence en cybersécurité</p>
             </section>
 
+            <!-- Quick nav anchors -->
+            <nav class="quicknav" aria-label="Navigation rapide entre diplômes">
+                <a href="#bachelor" style="--qn-color:rgba(167,139,250,.85)" data-target="bachelor"><span class="qn-dot"></span>Bachelor</a>
+                <a href="#bts-sio" style="--qn-color:rgba(110,231,183,.85)" data-target="bts-sio"><span class="qn-dot"></span>BTS SIO</a>
+                <a href="#bac-sti2d" style="--qn-color:rgba(103,232,249,.85)" data-target="bac-sti2d"><span class="qn-dot"></span>BAC STI2D</a>
+            </nav>
+
             <!-- Progress -->
             <div class="progress-wrap">
                 <div class="progress-track">
@@ -411,7 +615,7 @@
             <div class="timeline">
 
                 <!-- BACHELOR -->
-                <div class="timeline-item">
+                <div class="timeline-item" id="bachelor" style="--diploma-color:rgba(167,139,250,.85);--diploma-glow:rgba(167,139,250,.25)">
                     <div class="timeline-header">
                         <div class="year-badge">📅 2025 – 2026</div>
                         <h2 class="diploma-title">Bachelor</h2>
@@ -450,11 +654,24 @@
                                 <div class="skill-badge">Pentest</div>
                             </div>
                         </div>
+                        <div class="section">
+                            <h3 class="section-title"><span>📎</span> Documents <span class="sec-count">en cours</span></h3>
+                            <div class="docs-grid">
+                                <div class="doc-card is-empty" tabindex="-1" aria-hidden="true">
+                                    <div class="doc-fci">
+                                        <div class="doc-f">
+                                            <div class="doc-icon">＋</div>
+                                            <div class="doc-label" style="color:var(--text-muted)">Mémoire (à venir)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- BTS SIO -->
-                <div class="timeline-item">
+                <div class="timeline-item" id="bts-sio" style="--diploma-color:rgba(110,231,183,.85);--diploma-glow:rgba(110,231,183,.25)">
                     <div class="timeline-header">
                         <div class="year-badge">📅 2023 – 2025</div>
                         <h2 class="diploma-title">BTS SIO</h2>
@@ -491,11 +708,62 @@
                                 <div class="skill-badge">IDS</div>
                             </div>
                         </div>
+                        <div class="section">
+                            <h3 class="section-title"><span>📎</span> Documents <span class="sec-count">2 fichiers</span></h3>
+                            <div class="docs-grid">
+
+                                <div class="doc-card" tabindex="0" role="button" aria-label="Ouvrir Mémoire BTS SIO">
+                                    <div class="doc-fci">
+                                        <div class="doc-f">
+                                            <span class="doc-type">PDF</span>
+                                            <div class="doc-icon">📘</div>
+                                            <div class="doc-label">Mémoire</div>
+                                        </div>
+                                        <div class="doc-b">
+                                            <div class="doc-bh"><span class="doc-bn">Mémoire BTS</span><button class="doc-bx" aria-label="Fermer">✕</button></div>
+                                            <div class="doc-bd">Mémoire de fin d'études BTS SIO — soutenance sur la mise en place d'une infrastructure réseau sécurisée en entreprise.</div>
+                                            <div class="doc-bactions">
+                                                <button class="doc-preview" data-file="assets/docs/Memoire-BTS-SIO.pdf" data-title="Mémoire BTS SIO" data-type="PDF">👁</button>
+                                                <a class="doc-cta" href="assets/docs/Memoire-BTS-SIO.pdf" target="_blank" rel="noopener">↗</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="doc-card" tabindex="0" role="button" aria-label="Ouvrir Diplôme BTS SIO">
+                                    <div class="doc-fci">
+                                        <div class="doc-f">
+                                            <span class="doc-type">PDF</span>
+                                            <div class="doc-icon">🎓</div>
+                                            <div class="doc-label">Diplôme</div>
+                                        </div>
+                                        <div class="doc-b">
+                                            <div class="doc-bh"><span class="doc-bn">Diplôme</span><button class="doc-bx" aria-label="Fermer">✕</button></div>
+                                            <div class="doc-bd">Copie officielle du diplôme BTS Services Informatiques aux Organisations, option SISR.</div>
+                                            <div class="doc-bactions">
+                                                <button class="doc-preview" data-file="assets/docs/Diplome-BTS-SIO.pdf" data-title="Diplôme BTS SIO" data-type="PDF">👁</button>
+                                                <a class="doc-cta" href="assets/docs/Diplome-BTS-SIO.pdf" target="_blank" rel="noopener">↗</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="doc-card is-empty" tabindex="-1" aria-hidden="true">
+                                    <div class="doc-fci">
+                                        <div class="doc-f">
+                                            <div class="doc-icon">＋</div>
+                                            <div class="doc-label" style="color:var(--text-muted)">Relevé de notes</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- BAC STI2D -->
-                <div class="timeline-item">
+                <div class="timeline-item" id="bac-sti2d" style="--diploma-color:rgba(103,232,249,.85);--diploma-glow:rgba(103,232,249,.25)">
                     <div class="timeline-header">
                         <div class="year-badge">📅 2021 – 2023</div>
                         <h2 class="diploma-title">BAC STI2D</h2>
@@ -529,12 +797,68 @@
                                 <div class="skill-badge">CAO / DAO</div>
                             </div>
                         </div>
+                        <div class="section">
+                            <h3 class="section-title"><span>📎</span> Documents <span class="sec-count">1 fichier</span></h3>
+                            <div class="docs-grid">
+
+                                <div class="doc-card" tabindex="0" role="button" aria-label="Ouvrir Diplôme BAC STI2D">
+                                    <div class="doc-fci">
+                                        <div class="doc-f">
+                                            <span class="doc-type">PDF</span>
+                                            <div class="doc-icon">🎓</div>
+                                            <div class="doc-label">Diplôme</div>
+                                        </div>
+                                        <div class="doc-b">
+                                            <div class="doc-bh"><span class="doc-bn">Diplôme</span><button class="doc-bx" aria-label="Fermer">✕</button></div>
+                                            <div class="doc-bd">Copie officielle du Baccalauréat STI2D, spécialité Systèmes d'Information et Numérique (SIN).</div>
+                                            <div class="doc-bactions">
+                                                <button class="doc-preview" data-file="assets/docs/Diplome-BAC-STI2D.pdf" data-title="Diplôme BAC STI2D" data-type="PDF">👁</button>
+                                                <a class="doc-cta" href="assets/docs/Diplome-BAC-STI2D.pdf" target="_blank" rel="noopener">↗</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="doc-card is-empty" tabindex="-1" aria-hidden="true">
+                                    <div class="doc-fci">
+                                        <div class="doc-f">
+                                            <div class="doc-icon">＋</div>
+                                            <div class="doc-label" style="color:var(--text-muted)">Relevé de notes</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
 
             </div><!-- /timeline -->
         </div>
     </main>
+
+    <!-- MODAL APERÇU -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-head">
+                <div class="modal-title-wrap">
+                    <span class="modal-title" id="modalTitle">Document</span>
+                    <span class="modal-sub" id="modalSub">Aperçu</span>
+                </div>
+                <div class="modal-head-actions">
+                    <a class="modal-open-new" id="modalOpenNew" href="#" target="_blank" rel="noopener">↗ Nouvel onglet</a>
+                    <button class="modal-close" id="modalClose" aria-label="Fermer l'aperçu">✕</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <iframe id="modalIframe" title="Aperçu du document" referrerpolicy="no-referrer"></iframe>
+                <div class="modal-fallback" id="modalFallback">
+                    <div class="modal-fallback-emoji">📄</div>
+                    <p>L'aperçu intégré n'est pas disponible pour ce format de fichier. Ouvre le document dans un nouvel onglet pour le consulter.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
     const header = document.getElementById('header');
@@ -565,6 +889,99 @@
         document.body.classList.toggle('light-mode');
         localStorage.setItem('kl_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
     });
+
+    // ═══════════════════════════════
+    // QUICK NAV — scroll + flash de repérage
+    // ═══════════════════════════════
+    document.querySelectorAll('.quicknav a').forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            const target = document.getElementById(link.dataset.target);
+            if (!target) return;
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            target.classList.add('flash');
+            setTimeout(() => target.classList.remove('flash'), 1400);
+        });
+    });
+
+    // ═══════════════════════════════
+    // DOC FLIP CARDS — une seule ouverte à la fois
+    // ═══════════════════════════════
+    let openDoc = null;
+    function closeOpenDoc() { if (openDoc) { openDoc.classList.remove('open'); openDoc = null; } }
+    function openDocEl(card) {
+        if (openDoc && openDoc !== card) closeOpenDoc();
+        card.classList.add('open');
+        openDoc = card;
+    }
+
+    document.querySelectorAll('.doc-card:not(.is-empty)').forEach(card => {
+        const front = card.querySelector('.doc-f');
+        const closeBtn = card.querySelector('.doc-bx');
+        const previewBtn = card.querySelector('.doc-preview');
+        const ctaLink = card.querySelector('.doc-cta');
+
+        front.addEventListener('click', () => {
+            if (card.classList.contains('open')) closeOpenDoc();
+            else openDocEl(card);
+        });
+        card.addEventListener('keydown', e => {
+            if (document.activeElement !== card) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (card.classList.contains('open')) closeOpenDoc();
+                else openDocEl(card);
+            }
+        });
+        closeBtn.addEventListener('click', e => { e.stopPropagation(); closeOpenDoc(); });
+        ctaLink.addEventListener('click', e => e.stopPropagation());
+        previewBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            openPreview(previewBtn.dataset.file, previewBtn.dataset.title, previewBtn.dataset.type);
+        });
+    });
+
+    document.addEventListener('click', e => {
+        if (openDoc && !openDoc.contains(e.target)) closeOpenDoc();
+    });
+
+    // ═══════════════════════════════
+    // MODAL APERÇU
+    // ═══════════════════════════════
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalIframe   = document.getElementById('modalIframe');
+    const modalTitle    = document.getElementById('modalTitle');
+    const modalSub      = document.getElementById('modalSub');
+    const modalOpenNew  = document.getElementById('modalOpenNew');
+    const modalClose    = document.getElementById('modalClose');
+    const modalFallback = document.getElementById('modalFallback');
+
+    function openPreview(file, title, type) {
+        closeOpenDoc();
+        modalTitle.textContent = title || 'Document';
+        modalSub.textContent = type ? type + ' · aperçu' : 'Aperçu';
+        modalOpenNew.href = file;
+        modalFallback.classList.remove('show');
+        modalIframe.style.display = 'block';
+
+        if (type === 'PDF') {
+            modalIframe.src = file;
+        } else {
+            modalIframe.src = 'about:blank';
+            modalIframe.style.display = 'none';
+            modalFallback.classList.add('show');
+        }
+        modalOverlay.classList.add('show');
+        document.body.classList.add('modal-lock');
+    }
+    function closePreview() {
+        modalOverlay.classList.remove('show');
+        document.body.classList.remove('modal-lock');
+        modalIframe.src = 'about:blank';
+    }
+    modalClose.addEventListener('click', closePreview);
+    modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closePreview(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && modalOverlay.classList.contains('show')) closePreview(); });
     </script>
 </body>
 </html>
