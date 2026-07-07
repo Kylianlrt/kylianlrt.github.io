@@ -252,6 +252,7 @@
             border-radius: 20px; padding: 30px;
             backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
             transition: all 0.3s ease; cursor: pointer; position: relative; overflow: hidden;
+            text-decoration: none; display: block; color: inherit;
         }
         .article-card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
@@ -265,6 +266,13 @@
         .article-number {
             font-family: 'Fira Code', monospace; font-size: 0.75rem;
             color: rgba(167,139,250,0.7); margin-bottom: 12px; letter-spacing: 0.08em;
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        }
+        .article-badge {
+            font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 600;
+            letter-spacing: 0.04em; color: #67e8f9; background: rgba(103,232,249,0.12);
+            border: 1px solid rgba(103,232,249,0.3); border-radius: 999px; padding: 3px 10px;
+            white-space: nowrap;
         }
         .article-title {
             font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem;
@@ -446,6 +454,11 @@
                         <div class="article-title">Pentest & Red Team</div>
                         <div class="article-preview">Méthodologies de tests d'intrusion et exercices Red Team pour évaluer la sécurité de vos systèmes.</div>
                     </div>
+                    <a class="article-card" id="article7" href="prevention-phishing-medico-social.html">
+                        <div class="article-number">Article #7 <span class="article-badge">🖥️ Présentation</span></div>
+                        <div class="article-title">Prévention des Cyberattaques dans le Médico-Social</div>
+                        <div class="article-preview">Focus sur le phishing dans les établissements de santé et médico-sociaux : mécanismes, études de cas réels, anatomie d'un e-mail piégé et bonnes pratiques de prévention. Cliquez pour ouvrir la présentation interactive.</div>
+                    </a>
                 </div>
             </div>
 
