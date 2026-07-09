@@ -333,7 +333,7 @@ body{
 
   <!-- SLIDE 5 : TYPES -->
   <section class="slide light">
-    <div class="eyebrow">03 — Définition</div>
+    <div class="eyebrow">04 — Définition</div>
     <h2>Les multiples visages du phishing</h2>
     <div class="grid grid-3">
       <div class="card"><div class="icon-circle">📧</div><h3>Email phishing</h3><p>Envoi massif d'e-mails génériques imitant une marque ou un service connu, dans l'espoir qu'une partie des destinataires morde à l'hameçon.</p></div>
@@ -345,29 +345,42 @@ body{
     </div>
   </section>
 
-  <!-- SLIDE 6 : ETUDE DE CAS 1 -->
-  <section class="slide dark">
-    <div class="eyebrow">04 — Étude de cas</div>
-    <h2>Un hôpital parisien, avril 2022</h2>
-    <div class="grid grid-2">
-      <div class="card">
-        <p style="font-size:0.98rem;margin-bottom:18px;"><b>Un médecin ouvre un e-mail frauduleux</b> qui imite une communication interne de la direction de l'établissement.</p>
-        <p class="muted" style="margin-bottom:10px;">• Le message crée un climat de confiance en usurpant l'identité de la hiérarchie</p>
-        <p class="muted" style="margin-bottom:10px;">• Un lien ou une pièce jointe piégée permet aux attaquants de s'infiltrer dans le système</p>
-        <p class="muted" style="margin-bottom:10px;">• Plusieurs milliers de dossiers patients sont dérobés</p>
-        <p class="muted">• Le système informatique est paralysé pendant plusieurs jours</p>
+  <!-- SLIDE 6 : ETUDE DE CAS 1 (remplacée) -->
+  <section class="slide light">
+    <div class="eyebrow">05 — Étude de cas</div>
+    <h2>Un cas vécu : e-mail interne « Urgent », juillet 2026</h2>
+    <div class="email-wrap">
+      <div class="email-window">
+        <div class="email-bar">
+          <div class="email-dot" style="background:#e0503c;"></div>
+          <div class="email-dot" style="background:#f2c14e;"></div>
+          <div class="email-dot" style="background:#6ec9a6;"></div>
+        </div>
+        <div class="email-body">
+          <p class="from">De : <b>Maud Eglentine Babin</b> &lt;maud.eglentine.babin@apres.asso.fr&gt;</p>
+          <p style="margin-top:4px;color:#5c7c82;font-size:0.8rem;">Envoyé : mardi 7 juillet 2026 12:38 — À : Kylian Laurent</p>
+          <p class="subj" style="margin-top:8px;">Objet : <b>Urgent</b></p>
+          <hr style="border:none;border-top:1px solid #e4eded;margin:14px 0;">
+          <p>Bonjour à tous,</p><br>
+          <p>Le service informatique signale une hausse des cyberattaques visant nos outils de communication, avec plusieurs courriels frauduleux interceptés récemment.</p><br>
+          <p>Un guide de bonnes pratiques et de signalement a été mis à disposition. Cliquez sur le lien pour y accéder :</p><br>
+          <p class="email-link">Consulter le guide de vigilance</p><br>
+          <p>Cordialement,<br>Maud-Eglantine Babin — Directrice Adjointe, SAMSAH et Centre de Post-Cure<br>Association pour la RÉinsertion Sociale (APRES)</p>
+        </div>
       </div>
-      <div class="card" style="background:#16505f;">
-        <div class="icon-circle" style="background:#2c6772;">⚠️</div>
-        <h3>Ce qu'il faut retenir</h3>
-        <p>Le facteur humain reste le maillon décisif : la confiance naturelle envers la hiérarchie a été exploitée. Une simple vérification (appel, canal officiel) aurait pu éviter l'attaque.</p>
+      <div class="flags">
+        <div class="flag"><div class="icon-circle" style="background:#fbe6e3;">⚠️</div><div><h4>Objet minimaliste et anxiogène</h4><p>Un simple « Urgent » sans autre précision, pensé pour capter l'attention et pousser à l'ouverture immédiate.</p></div></div>
+        <div class="flag"><div class="icon-circle" style="background:#fbe6e3;">🔗</div><div><h4>Un lien à cliquer, sans le vérifier</h4><p>Le message invite à cliquer sur un lien « guide de vigilance » sans en montrer l'adresse réelle avant le clic.</p></div></div>
+        <div class="flag"><div class="icon-circle" style="background:#fbe6e3;">🧑‍💼</div><div><h4>Autorité interne invoquée</h4><p>La signature d'une directrice adjointe renforce la confiance et réduit les réflexes de vérification.</p></div></div>
+        <div class="flag"><div class="icon-circle" style="background:#fbe6e3;">✂️</div><div><h4>Message tronqué</h4><p>La coupure du message et le bouton « Afficher l'intégralité » sont eux-mêmes des leviers utilisés pour inciter à cliquer plus loin.</p></div></div>
       </div>
     </div>
+    <div class="sources" style="font-style:normal;">Même une communication interne légitime peut recycler, sans le vouloir, les codes du phishing (urgence, lien à cliquer, autorité) : la vigilance doit s'appliquer à tous les e-mails, sans exception.</div>
   </section>
 
   <!-- SLIDE 7 : ETUDE DE CAS 2 -->
   <section class="slide light">
-    <div class="eyebrow">04 — Étude de cas</div>
+    <div class="eyebrow">06 — Étude de cas</div>
     <h2>Centre Hospitalier Sud-Francilien, août 2022</h2>
     <div class="timeline">
       <div class="tl-item">
@@ -392,7 +405,7 @@ body{
 
   <!-- SLIDE 8 : ANATOMIE EMAIL -->
   <section class="slide light">
-    <div class="eyebrow">05 — Détection</div>
+    <div class="eyebrow">07 — Détection</div>
     <h2>Anatomie d'un e-mail de phishing</h2>
     <div class="email-wrap">
       <div class="email-window">
@@ -422,7 +435,7 @@ body{
 
   <!-- SLIDE 9 : CONSEQUENCES -->
   <section class="slide dark">
-    <div class="eyebrow">06 — Impacts</div>
+    <div class="eyebrow">08 — Impacts</div>
     <h2>Des conséquences lourdes pour l'établissement</h2>
     <div class="grid grid-3">
       <div class="card"><div class="icon-circle">🏥</div><h3>Rupture de la continuité des soins</h3><p>Retour au papier, ralentissement des prises en charge, parfois report d'interventions.</p></div>
@@ -436,7 +449,7 @@ body{
 
   <!-- SLIDE 10 : BONNES PRATIQUES -->
   <section class="slide light">
-    <div class="eyebrow">07 — Prévention</div>
+    <div class="eyebrow">09 — Prévention</div>
     <h2>Les bonnes pratiques à adopter</h2>
     <div class="grid grid-3">
       <div class="card"><div class="icon-circle">🧑‍🤝‍🧑</div><h3>Former & sensibiliser</h3><p>Simulations régulières de phishing et sessions de sensibilisation pour tout le personnel.</p></div>
@@ -450,7 +463,7 @@ body{
 
   <!-- SLIDE 11 : REAGIR -->
   <section class="slide dark">
-    <div class="eyebrow">08 — Réaction</div>
+    <div class="eyebrow">10 — Réaction</div>
     <h2>Réagir face à un doute ou un incident</h2>
     <div class="grid grid-3">
       <div class="card"><span class="step-num" style="color:#3e7480;">01</span><div class="icon-circle" style="margin-top:8px;">🚫</div><h3>Ne rien cliquer, ne pas répondre</h3><p>Ne transmettez ni identifiants ni pièce jointe, même si le message semble urgent.</p></div>
