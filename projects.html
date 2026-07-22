@@ -48,7 +48,7 @@ body.light-mode .orb { opacity:.18; }
   75%{transform:translate(-40px,-20px) scale(1.02)}
 }
 @media (prefers-reduced-motion: reduce) {
-  .orb, .fci, .fc, .ciw { animation:none !important; transition:none !important; }
+  .orb, .fci, .fc, .ciw, .folder-card { animation:none !important; transition:none !important; }
 }
 .bg-grain { position:fixed;inset:0;z-index:1;opacity:.04;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:200px; }
 
@@ -90,7 +90,6 @@ nav a:hover::after, nav a:focus-visible::after { width:100%; }
 .nav-footer { font-family:'DM Sans',sans-serif;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.25); }
 body.light-mode .nav-footer { color:rgba(60,40,120,.35); }
 
-/* Focus visibility (accessibility floor) */
 a:focus-visible, button:focus-visible, input:focus-visible {
   outline: 2px solid rgba(167,139,250,.85);
   outline-offset: 3px;
@@ -135,16 +134,71 @@ main { padding:140px 24px 80px;position:relative;z-index:2;max-width:1100px;marg
 .empty-title { font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:8px;color:var(--text); }
 .empty-sub { font-size:.85rem;color:var(--text-muted); }
 
-/* CATEGORY */
-.category { margin-bottom:56px;animation:fadeUp .8s cubic-bezier(.34,1.56,.64,1) .25s both;transition:opacity .25s; }
-.category.cat-hidden { display:none; }
-.cat-header { display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:16px;position:relative; }
-.cat-header::after { content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,var(--cat-color,rgba(167,139,250,.5)),transparent 70%); }
-.cat-badge { width:50px;height:50px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12); }
-.cat-info { flex:1; }
-.cat-name { font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cat-color,var(--text));margin-bottom:3px; }
-.cat-count { font-size:.78rem;color:var(--text-muted); }
-.cat-idx { font-family:'Syne',sans-serif;font-size:.65rem;letter-spacing:.1em;color:var(--text-muted);opacity:.5; }
+/* ═══════════════════════════════
+   BREADCRUMB
+═══════════════════════════════ */
+.breadcrumb { display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:36px;animation:fadeUp .6s both; }
+.crumb-btn, .crumb-current {
+  font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.04em;
+  padding:8px 14px;border-radius:10px;
+}
+.crumb-btn { background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text-muted);cursor:pointer;transition:all .2s; }
+.crumb-btn:hover { color:var(--text);border-color:rgba(167,139,250,.5);background:rgba(167,139,250,.1); }
+.crumb-current { color:var(--text);background:rgba(167,139,250,.14);border:1px solid rgba(167,139,250,.32); }
+.crumb-sep { color:var(--text-muted);opacity:.4;font-size:.8rem; }
+
+/* ═══════════════════════════════
+   FOLDER CARDS (catégories / sous-catégories)
+═══════════════════════════════ */
+.folder-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:18px;
+  margin-bottom:20px;
+  animation:fadeUp .7s cubic-bezier(.34,1.56,.64,1) both;
+}
+.folder-card {
+  position:relative;
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  border-radius:20px;
+  padding:26px 22px;
+  cursor:pointer;
+  backdrop-filter:blur(40px);
+  box-shadow:0 14px 40px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.08);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s,border-color .3s;
+  outline:none;
+  overflow:hidden;
+}
+.folder-card::before { content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--folder-color,rgba(167,139,250,.6)),transparent); }
+.folder-card::after { content:'';position:absolute;inset:0;border-radius:20px;background:radial-gradient(circle at 30% 20%,var(--folder-color,rgba(167,139,250,.4)),transparent 60%);opacity:0;transition:opacity .35s;pointer-events:none; }
+.folder-card:hover, .folder-card:focus-visible { transform:translateY(-6px);box-shadow:0 26px 60px rgba(0,0,0,.32);border-color:var(--folder-color,rgba(167,139,250,.55)); }
+.folder-card:hover::after, .folder-card:focus-visible::after { opacity:.08; }
+.folder-icon-wrap { width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);margin-bottom:16px;box-shadow:0 8px 20px rgba(0,0,0,.25);transition:transform .35s cubic-bezier(.34,1.56,.64,1); }
+.folder-card:hover .folder-icon-wrap { transform:translateY(-4px) scale(1.06); }
+.folder-name { font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;color:var(--text);margin-bottom:4px;letter-spacing:-.01em; }
+.folder-sub { font-size:.72rem;color:var(--text-muted);margin-bottom:10px; }
+.folder-count { display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--folder-color,rgba(167,139,250,.9)); }
+.folder-count.is-empty { color:var(--text-muted);opacity:.6; }
+.folder-arrow { position:absolute;bottom:20px;right:20px;font-size:.9rem;color:var(--text-muted);opacity:0;transform:translateX(-6px);transition:all .3s; }
+.folder-card:hover .folder-arrow, .folder-card:focus-visible .folder-arrow { opacity:.8;transform:translateX(0); }
+
+.folder-card.sub { padding:22px 20px; }
+.folder-card.sub .folder-icon-wrap { width:46px;height:46px;font-size:1.3rem;margin-bottom:12px; }
+.folder-card.sub .folder-name { font-size:.94rem; }
+
+.level-block { display:none; }
+.level-block.active { display:block; }
+
+.subcat-empty { text-align:center;padding:50px 20px;color:var(--text-muted);font-size:.85rem; }
+
+/* CATEGORY (section) label used inside a subcat's doc view */
+.docs-heading { display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:16px;position:relative; }
+.docs-heading::after { content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,var(--folder-color,rgba(167,139,250,.5)),transparent 70%); }
+.docs-badge { width:50px;height:50px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12); }
+.docs-info { flex:1; }
+.docs-name { font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.14em;text-transform:uppercase;color:var(--folder-color,var(--text));margin-bottom:3px; }
+.docs-count { font-size:.78rem;color:var(--text-muted); }
 
 /* ═══════════════════════════════
    CARDS — flip stable, sans casser le flux
@@ -218,11 +272,11 @@ main { padding:140px 24px 80px;position:relative;z-index:2;max-width:1100px;marg
   padding: 16px;
   overflow: hidden;
 }
-.fb::before { content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--cat-color,rgba(167,139,250,.7)),transparent); }
+.fb::before { content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--folder-color,rgba(167,139,250,.7)),transparent); }
 body.light-mode .fb { background:rgba(237,233,254,.97); }
 
 .bh { display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0; }
-.bn { font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;color:var(--cat-color,rgba(167,139,250,.9));letter-spacing:.1em;text-transform:uppercase;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+.bn { font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;color:var(--folder-color,rgba(167,139,250,.9));letter-spacing:.1em;text-transform:uppercase;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
 .bx { width:26px;height:26px;border-radius:7px;border:none;cursor:pointer;background:rgba(255,255,255,.08);color:var(--text-muted);font-size:.8rem;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;margin-left:6px; }
 .bx:hover, .bx:focus-visible { background:rgba(255,100,130,.2);color:#ff6080; }
 
@@ -247,7 +301,7 @@ body.light-mode .fb { background:rgba(237,233,254,.97); }
   text-transform: uppercase;
   transition: all .25s;
   flex: 1;
-  border: 1px solid var(--cat-color, rgba(167,139,250,.5));
+  border: 1px solid var(--folder-color, rgba(167,139,250,.5));
   cursor: pointer;
 }
 .bcta {
@@ -309,9 +363,9 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   nav a { font-size:1.5rem;padding:13px 0; }
   main { padding:120px 16px 60px; }
   .icons-grid { grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; }
+  .folder-grid { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
   .fc { height:215px; }
   .ciw { width:64px;height:64px; }
-  .cat-idx { display:none; }
   .bactions { flex-direction:column; }
 }
 </style>
@@ -371,9 +425,18 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
 
   <div class="stats" id="statsBlock">
     <div class="stat-card"><div class="stat-num">5</div><div class="stat-lbl">Catégories</div></div>
-    <div class="stat-card"><div class="stat-num">17</div><div class="stat-lbl">Documents</div></div>
-    <div class="stat-card"><div class="stat-num">8+</div><div class="stat-lbl">Technos</div></div>
+    <div class="stat-card"><div class="stat-num">23</div><div class="stat-lbl">Documents</div></div>
+    <div class="stat-card"><div class="stat-num">14</div><div class="stat-lbl">Sous-catégories</div></div>
     <div class="stat-card"><div class="stat-num">2</div><div class="stat-lbl">Certifications</div></div>
+  </div>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb" id="breadcrumb">
+    <button class="crumb-btn" id="crumbRoot">📁 Catégories</button>
+    <span class="crumb-sep" id="sep1" style="display:none;">/</span>
+    <button class="crumb-btn" id="crumbCat" style="display:none;"></button>
+    <span class="crumb-sep" id="sep2" style="display:none;">/</span>
+    <span class="crumb-current" id="crumbSub" style="display:none;"></span>
   </div>
 
   <div class="empty-state" id="emptyState">
@@ -382,540 +445,511 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
     <div class="empty-sub">Essaie un autre mot-clé, ou efface la recherche pour tout revoir.</div>
   </div>
 
-  <!-- BACHELOR -->
-  <section class="category" data-category="Bachelor" style="--cat-color:rgba(103,232,249,.85)">
-    <div class="cat-header">
-      <div class="cat-badge">🎓</div>
-      <div class="cat-info">
-        <div class="cat-name">Bachelor</div>
-        <div class="cat-count">9 documents · 1ère Année</div>
+  <!-- ══════════════ NIVEAU 0 : CATÉGORIES ══════════════ -->
+  <div class="level-block active" id="levelCategories">
+    <div class="folder-grid">
+
+      <div class="folder-card" tabindex="0" role="button" data-cat="cyber" style="--folder-color:rgba(255,100,130,.85)">
+        <div class="folder-icon-wrap">🛡️</div>
+        <div class="folder-name">Cybersécurité</div>
+        <div class="folder-sub">Défense, audit &amp; réponse</div>
+        <div class="folder-count">7 documents</div>
+        <div class="folder-arrow">→</div>
       </div>
-      <div class="cat-idx">[ 01 / 05 ]</div>
+
+      <div class="folder-card" tabindex="0" role="button" data-cat="reseaux" style="--folder-color:rgba(110,231,183,.85)">
+        <div class="folder-icon-wrap">🌐</div>
+        <div class="folder-name">Réseaux</div>
+        <div class="folder-sub">Infra, systèmes &amp; routage</div>
+        <div class="folder-count">9 documents</div>
+        <div class="folder-arrow">→</div>
+      </div>
+
+      <div class="folder-card" tabindex="0" role="button" data-cat="dev" style="--folder-color:rgba(103,232,249,.85)">
+        <div class="folder-icon-wrap">💻</div>
+        <div class="folder-name">Développement</div>
+        <div class="folder-sub">Scripting &amp; automatisation</div>
+        <div class="folder-count">1 document</div>
+        <div class="folder-arrow">→</div>
+      </div>
+
+      <div class="folder-card" tabindex="0" role="button" data-cat="ia" style="--folder-color:rgba(251,191,36,.85)">
+        <div class="folder-icon-wrap">🤖</div>
+        <div class="folder-name">IA</div>
+        <div class="folder-sub">Intelligence artificielle</div>
+        <div class="folder-count is-empty">Bientôt disponible</div>
+        <div class="folder-arrow">→</div>
+      </div>
+
+      <div class="folder-card" tabindex="0" role="button" data-cat="pentest" style="--folder-color:rgba(167,139,250,.85)">
+        <div class="folder-icon-wrap">🎯</div>
+        <div class="folder-name">Pentest</div>
+        <div class="folder-sub">Offensif, CTF &amp; certifs</div>
+        <div class="folder-count">6 documents</div>
+        <div class="folder-arrow">→</div>
+      </div>
+
     </div>
-    <div class="icons-grid">
+  </div>
 
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Active Directory" data-search="active directory windows ad gpo 1a">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">DOCX</span>
-            <div class="ciw"><img src="assets/image/ACTIVE DIRECTORY.webp" alt="Active Directory" loading="lazy"></div>
-            <div class="cl">Active Directory</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">Active Directory</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Documentation complète sur la mise en place d'un Active Directory Windows Server. Gestion des GPO, unités d'organisation et politiques de sécurité avancées.</div>
-            <div class="btags"><span class="btag">Windows</span><span class="btag">AD</span><span class="btag">GPO</span><span class="btag">1A</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/AD.docx" data-title="Active Directory" data-type="DOCX">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
+  <!-- ══════════════ NIVEAU 1 : SOUS-CATÉGORIES ══════════════ -->
+
+  <!-- CYBERSÉCURITÉ -->
+  <div class="level-block" id="cat-cyber" data-cat="cyber">
+    <div class="folder-grid">
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="cyber" data-subcat="analyse-risques" style="--folder-color:rgba(255,100,130,.85)">
+        <div class="folder-icon-wrap">📊</div>
+        <div class="folder-name">Analyse de risques</div>
+        <div class="folder-count">1 document</div>
+        <div class="folder-arrow">→</div>
       </div>
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="cyber" data-subcat="securite-reseau" style="--folder-color:rgba(255,100,130,.85)">
+        <div class="folder-icon-wrap">🧱</div>
+        <div class="folder-name">Sécurité réseau</div>
+        <div class="folder-count">2 documents</div>
+        <div class="folder-arrow">→</div>
+      </div>
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="cyber" data-subcat="blue-team" style="--folder-color:rgba(255,100,130,.85)">
+        <div class="folder-icon-wrap">🕵️</div>
+        <div class="folder-name">Blue Team / SOC</div>
+        <div class="folder-count">2 documents</div>
+        <div class="folder-arrow">→</div>
+      </div>
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="cyber" data-subcat="reponse-incident" style="--folder-color:rgba(255,100,130,.85)">
+        <div class="folder-icon-wrap">🚨</div>
+        <div class="folder-name">Réponse à incident</div>
+        <div class="folder-count">1 document</div>
+        <div class="folder-arrow">→</div>
+      </div>
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="cyber" data-subcat="hardening" style="--folder-color:rgba(255,100,130,.85)">
+        <div class="folder-icon-wrap">🔒</div>
+        <div class="folder-name">Hardening</div>
+        <div class="folder-count">1 document</div>
+        <div class="folder-arrow">→</div>
+      </div>
+    </div>
+  </div>
 
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Python / Rapport Sécurité" data-search="python securite risques rapport 1a">
+  <!-- RÉSEAUX -->
+  <div class="level-block" id="cat-reseaux" data-cat="reseaux">
+    <div class="folder-grid">
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="reseaux" data-subcat="admin-systemes" style="--folder-color:rgba(110,231,183,.85)">
+        <div class="folder-icon-wrap">🖥️</div>
+        <div class="folder-name">Administration systèmes</div>
+        <div class="folder-count">3 documents</div>
+        <div class="folder-arrow">→</div>
+      </div>
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="reseaux" data-subcat="infra-virtu" style="--folder-color:rgba(110,231,183,.85)">
+        <div class="folder-icon-wrap">🗄️</div>
+        <div class="folder-name">Infrastructure &amp; Virtualisation</div>
+        <div class="folder-count">5 documents</div>
+        <div class="folder-arrow">→</div>
+      </div>
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="reseaux" data-subcat="routage" style="--folder-color:rgba(110,231,183,.85)">
+        <div class="folder-icon-wrap">🛰️</div>
+        <div class="folder-name">Routage</div>
+        <div class="folder-count">1 document</div>
+        <div class="folder-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DÉVELOPPEMENT -->
+  <div class="level-block" id="cat-dev" data-cat="dev">
+    <div class="folder-grid">
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="dev" data-subcat="scripting" style="--folder-color:rgba(103,232,249,.85)">
+        <div class="folder-icon-wrap">⚙️</div>
+        <div class="folder-name">Scripting &amp; Automatisation</div>
+        <div class="folder-count">1 document</div>
+        <div class="folder-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IA -->
+  <div class="level-block" id="cat-ia" data-cat="ia">
+    <div class="subcat-empty">
+      <div class="empty-emoji">🤖</div>
+      <div class="empty-title">Aucun document pour l'instant</div>
+      <div class="empty-sub">Les projets IA arriveront prochainement dans cette catégorie.</div>
+    </div>
+  </div>
+
+  <!-- PENTEST -->
+  <div class="level-block" id="cat-pentest" data-cat="pentest">
+    <div class="folder-grid">
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="pentest" data-subcat="ctf" style="--folder-color:rgba(167,139,250,.85)">
+        <div class="folder-icon-wrap">🚩</div>
+        <div class="folder-name">CTF</div>
+        <div class="folder-count">1 document</div>
+        <div class="folder-arrow">→</div>
+      </div>
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="pentest" data-subcat="audit" style="--folder-color:rgba(167,139,250,.85)">
+        <div class="folder-icon-wrap">🔬</div>
+        <div class="folder-name">Audit</div>
+        <div class="folder-count">2 documents</div>
+        <div class="folder-arrow">→</div>
+      </div>
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="pentest" data-subcat="red-team" style="--folder-color:rgba(167,139,250,.85)">
+        <div class="folder-icon-wrap">💣</div>
+        <div class="folder-name">Red Team</div>
+        <div class="folder-count">1 document</div>
+        <div class="folder-arrow">→</div>
+      </div>
+      <div class="folder-card sub" tabindex="0" role="button" data-cat="pentest" data-subcat="certifications" style="--folder-color:rgba(167,139,250,.85)">
+        <div class="folder-icon-wrap">🏆</div>
+        <div class="folder-name">Certifications</div>
+        <div class="folder-count">2 documents</div>
+        <div class="folder-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ NIVEAU 2 : DOCUMENTS PAR SOUS-CATÉGORIE ══════════════ -->
+
+  <!-- Cyber > Analyse de risques -->
+  <div class="level-block subcat-block" data-cat="cyber" data-subcat="analyse-risques" style="--folder-color:rgba(255,100,130,.85)">
+    <div class="docs-heading"><div class="docs-badge">📊</div><div class="docs-info"><div class="docs-name">Analyse de risques</div><div class="docs-count">1 document</div></div></div>
+    <div class="icons-grid">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Rapport Sécurité" data-search="python securite risques rapport 1a">
         <div class="fci">
-          <div class="ff">
-            <span class="ctype">DOCX</span>
-            <div class="ciw"><img src="assets/image/f5643096750899.5eb54f3381b8f.png" alt="Python" loading="lazy"></div>
-            <div class="cl">Python</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
+          <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/f5643096750899.5eb54f3381b8f.png" alt="Rapport Sécurité" loading="lazy"></div><div class="cl">Rapport Sécurité</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
             <div class="bh"><span class="bn">Rapport Sécurité</span><button class="bx" aria-label="Fermer">✕</button></div>
             <div class="bd">Rapport de sécurité 1ère année. Analyse des risques, cartographie des menaces et préconisations de remédiation priorisées par criticité.</div>
             <div class="btags"><span class="btag">Sécurité</span><span class="btag">Risques</span><span class="btag">1A</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/Bachelor1-Annee1-Rapport.docx" data-title="Rapport Sécurité" data-type="DOCX">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/Bachelor1-Annee1-Rapport.docx" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/Bachelor1-Annee1-Rapport.docx" data-title="Rapport Sécurité" data-type="DOCX">👁 Aperçu</button><a class="bcta" href="assets/docs/Bachelor1-Annee1-Rapport.docx" target="_blank" rel="noopener">↗ Ouvrir</a></div>
           </div>
         </div>
       </div>
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche CTF" data-search="ctf hack capture the flag 1a">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">DOCX</span>
-            <div class="ciw"><img src="assets/image/hackaton.webp" alt="CTF" loading="lazy"></div>
-            <div class="cl">CTF</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">CTF</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Capture The Flag — résolution de challenges offensifs en équipe. Exploitation web, cryptographie, forensics et reverse engineering.</div>
-            <div class="btags"><span class="btag">CTF</span><span class="btag">Hack</span><span class="btag">1A</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/AD.docx" data-title="CTF" data-type="DOCX">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Backup" data-search="backup sauvegarde 3-2-1 1a">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">DOCX</span>
-            <div class="ciw"><img src="assets/image/backup.webp" alt="Backup" loading="lazy"></div>
-            <div class="cl">Backup</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">Backup</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Mise en place d'une solution de sauvegarde automatisée. Politique de rétention 3-2-1, tests de restauration et supervision des jobs.</div>
-            <div class="btags"><span class="btag">Backup</span><span class="btag">3-2-1</span><span class="btag">1A</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/AD.docx" data-title="Backup" data-type="DOCX">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Supervision" data-search="supervision monitoring zabbix 1a">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">DOCX</span>
-            <div class="ciw"><img src="assets/image/supervision.png" alt="Supervision" loading="lazy"></div>
-            <div class="cl">Supervision</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">Supervision</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Déploiement d'une infrastructure de supervision réseau et système. Alertes, tableaux de bord et corrélation d'événements.</div>
-            <div class="btags"><span class="btag">Monitoring</span><span class="btag">Zabbix</span><span class="btag">1A</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/AD.docx" data-title="Supervision" data-type="DOCX">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche VMware" data-search="vmware esxi virtualisation 1a">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">DOCX</span>
-            <div class="ciw"><img src="assets/image/vmware.png" alt="VMware" loading="lazy"></div>
-            <div class="cl">VMware</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">VMware</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Installation et configuration d'un environnement VMware ESXi. Gestion des VMs, snapshots, vSwitchs et migrations à chaud.</div>
-            <div class="btags"><span class="btag">VMware</span><span class="btag">ESXi</span><span class="btag">1A</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/AD.docx" data-title="VMware" data-type="DOCX">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche PowerShell" data-search="powershell scripting automatisation 1a">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">DOCX</span>
-            <div class="ciw"><img src="assets/image/powershell.png" alt="PowerShell" loading="lazy"></div>
-            <div class="cl">PowerShell</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">PowerShell</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Scripts PowerShell pour l'automatisation de tâches d'administration Windows. Gestion des utilisateurs AD, rapports et déploiements.</div>
-            <div class="btags"><span class="btag">PowerShell</span><span class="btag">Scripting</span><span class="btag">1A</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/AD.docx" data-title="PowerShell" data-type="DOCX">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Hyper-V" data-search="hyperv hyper-v cluster windows 1a">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">DOCX</span>
-            <div class="ciw"><img src="assets/image/hyperv.webp" alt="HyperV" loading="lazy"></div>
-            <div class="cl">HyperV</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">Hyper-V</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Mise en place d'une infrastructure de virtualisation Hyper-V. Réplication, clustering et haute disponibilité des machines virtuelles.</div>
-            <div class="btags"><span class="btag">Hyper-V</span><span class="btag">Windows</span><span class="btag">1A</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/AD.docx" data-title="Hyper-V" data-type="DOCX">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Routing" data-search="routing ospf bgp vlan reseau">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/routing.webp" alt="Routing" loading="lazy"></div>
-            <div class="cl">Routing</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">Routing</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Configuration et documentation du routage réseau. Protocoles OSPF, BGP, et mise en place de VLANs inter-sites sécurisés.</div>
-            <div class="btags"><span class="btag">Routing</span><span class="btag">OSPF</span><span class="btag">BGP</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/Perso-Automation-Scripts.pdf" data-title="Routing" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/Perso-Automation-Scripts.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
-  </section>
+  </div>
 
-  <!-- BTS SIO -->
-  <section class="category" data-category="BTS SIO" style="--cat-color:rgba(110,231,183,.85)">
-    <div class="cat-header">
-      <div class="cat-badge">📚</div>
-      <div class="cat-info">
-        <div class="cat-name">BTS SIO</div>
-        <div class="cat-count">5 documents · 1ère &amp; 2ème Année</div>
-      </div>
-      <div class="cat-idx">[ 02 / 05 ]</div>
-    </div>
+  <!-- Cyber > Sécurité réseau -->
+  <div class="level-block subcat-block" data-cat="cyber" data-subcat="securite-reseau" style="--folder-color:rgba(255,100,130,.85)">
+    <div class="docs-heading"><div class="docs-badge">🧱</div><div class="docs-info"><div class="docs-name">Sécurité réseau</div><div class="docs-count">2 documents</div></div></div>
     <div class="icons-grid">
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Active Directory BTS" data-search="active directory windows fsmo ldap 1a bts">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/ACTIVE DIRECTORY.webp" alt="Active Directory BTS" loading="lazy"></div>
-            <div class="cl">Active Directory</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">Active Directory</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Étude et déploiement d'un Active Directory en BTS. Arborescence LDAP, rôles FSMO, réplication inter-sites et gestion fine des permissions.</div>
-            <div class="btags"><span class="btag">Windows</span><span class="btag">FSMO</span><span class="btag">LDAP</span><span class="btag">1A</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/AD.pdf" data-title="Active Directory (BTS)" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/AD.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche DMZ" data-search="dmz reseau firewall demilitarisee 1a">
         <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/DMZ.webp" alt="DMZ" loading="lazy"></div>
-            <div class="cl">DMZ</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/DMZ.webp" alt="DMZ" loading="lazy"></div><div class="cl">DMZ</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
             <div class="bh"><span class="bn">Zone Démilitarisée</span><button class="bx" aria-label="Fermer">✕</button></div>
             <div class="bd">Conception et déploiement d'une architecture DMZ. Cloisonnement réseau, pare-feu double, exposition sécurisée des services publics et règles de filtrage.</div>
             <div class="btags"><span class="btag">Réseau</span><span class="btag">Firewall</span><span class="btag">DMZ</span><span class="btag">1A</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/dmz.pdf" data-title="DMZ" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/dmz.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/dmz.pdf" data-title="DMZ" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/dmz.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
           </div>
         </div>
       </div>
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche GLPI" data-search="glpi inventaire agent ticketing">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/OIP.webp" alt="GLPI" loading="lazy"></div>
-            <div class="cl">GLPI</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">GLPI</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Installation et configuration de GLPI sur un serveur et un poste client. Inventaire automatisé via agent et gestion des tickets.</div>
-            <div class="btags"><span class="btag">Inventaire</span><span class="btag">Agent</span><span class="btag">Ticketing</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/BTS-Annee2-E4.pdf" data-title="GLPI" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/BTS-Annee2-E4.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche PFsense" data-search="pfsense routing firewall vpn dmz">
         <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/pfsense.webp" alt="PFsense" loading="lazy"></div>
-            <div class="cl">PFsense</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/pfsense.webp" alt="PFsense" loading="lazy"></div><div class="cl">PFsense</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
             <div class="bh"><span class="bn">PFsense</span><button class="bx" aria-label="Fermer">✕</button></div>
             <div class="bd">Conception d'une DMZ en utilisant la solution PFsense. Règles de filtrage avancées, VPN IPSec et portail captif.</div>
             <div class="btags"><span class="btag">Routing</span><span class="btag">Firewall</span><span class="btag">Sécurité</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/BTS-Annee2-E5.pdf" data-title="PFsense" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/BTS-Annee2-E5.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/BTS-Annee2-E5.pdf" data-title="PFsense" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/BTS-Annee2-E5.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
+  <!-- Cyber > Blue Team / SOC -->
+  <div class="level-block subcat-block" data-cat="cyber" data-subcat="blue-team" style="--folder-color:rgba(255,100,130,.85)">
+    <div class="docs-heading"><div class="docs-badge">🕵️</div><div class="docs-info"><div class="docs-name">Blue Team / SOC</div><div class="docs-count">2 documents</div></div></div>
+    <div class="icons-grid">
       <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Wireshark" data-search="wireshark detection intrusion stage e6 2a">
         <div class="fci">
-          <div class="ff">
-            <span class="ctype">DOCX</span>
-            <div class="ciw"><img src="assets/image/Untitled-design-2.png" alt="Wireshark" loading="lazy"></div>
-            <div class="cl">Wireshark</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
+          <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/Untitled-design-2.png" alt="Wireshark" loading="lazy"></div><div class="cl">Wireshark</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
             <div class="bh"><span class="bn">Détection d'intrusion</span><button class="bx" aria-label="Fermer">✕</button></div>
             <div class="bd">Tests d'attaques depuis une machine distante analysés avec Wireshark en temps réel. Identification des patterns et règles de détection.</div>
             <div class="btags"><span class="btag">Wireshark</span><span class="btag">Stage</span><span class="btag">E6</span><span class="btag">2A</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/BTS-Annee2-E6.docx" data-title="Wireshark" data-type="DOCX">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/BTS-Annee2-E6.docx" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/BTS-Annee2-E6.docx" data-title="Wireshark" data-type="DOCX">👁 Aperçu</button><a class="bcta" href="assets/docs/BTS-Annee2-E6.docx" target="_blank" rel="noopener">↗ Ouvrir</a></div>
           </div>
         </div>
       </div>
-
-    </div>
-  </section>
-
-  <!-- APRES -->
-  <section class="category" data-category="APRES" style="--cat-color:rgba(251,191,36,.85)">
-    <div class="cat-header">
-      <div class="cat-badge">🔍</div>
-      <div class="cat-info">
-        <div class="cat-name">APRES</div>
-        <div class="cat-count">3 documents · Audits &amp; Tests d'intrusion</div>
-      </div>
-      <div class="cat-idx">[ 03 / 05 ]</div>
-    </div>
-    <div class="icons-grid">
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Audit Infrastructure" data-search="audit infrastructure cvss reseau">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/ACTIVE DIRECTORY.webp" alt="Basculement AD" loading="lazy"></div>
-            <div class="cl">Basculement AD</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">Audit Infra</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Audit complet de l'infrastructure réseau et système. Identification des failles critiques, scoring CVSS et recommandations de remédiation priorisées.</div>
-            <div class="btags"><span class="btag">Audit</span><span class="btag">CVSS</span><span class="btag">Réseau</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/APRES-Audit-Infrastructure.pdf" data-title="Audit Infrastructure" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/APRES-Audit-Infrastructure.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Audit Application Web" data-search="owasp xss sqli audit application web">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/zabbix-logo-image.png" alt="Supervision Serveurs" loading="lazy"></div>
-            <div class="cl">Supervision Serveurs</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">Audit App Web</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Audit sécurité application web selon OWASP Top 10 — SQLi, XSS, CSRF, IDOR, misconfigurations et rapport de vulnérabilités avec PoC.</div>
-            <div class="btags"><span class="btag">OWASP</span><span class="btag">XSS</span><span class="btag">SQLi</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/APRES-Audit-Application.pdf" data-title="Audit Application Web" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/APRES-Audit-Application.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Pentest Final" data-search="pentest red team exploit rapport">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/pentest.webp" alt="Pentest" loading="lazy"></div>
-            <div class="cl">Pentest</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">Pentest Final</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Rapport de test d'intrusion complet — mission Red Team, chaîne d'exploitation, preuves et plan de remédiation hiérarchisé par criticité.</div>
-            <div class="btags"><span class="btag">Red Team</span><span class="btag">Exploit</span><span class="btag">Rapport</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/APRES-Pentest-Final.pdf" data-title="Pentest Final" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/APRES-Pentest-Final.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ADES -->
-  <section class="category" data-category="ADES" style="--cat-color:rgba(167,139,250,.85)">
-    <div class="cat-header">
-      <div class="cat-badge">🏆</div>
-      <div class="cat-info">
-        <div class="cat-name">ADES</div>
-        <div class="cat-count">4 documents · Certifications &amp; Projets Avancés</div>
-      </div>
-      <div class="cat-idx">[ 04 / 05 ]</div>
-    </div>
-    <div class="icons-grid">
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Mesh Centrale" data-search="mesh centrale offsec certification pentest">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/mesh centrale.png" alt="Mesh Centrale" loading="lazy"></div>
-            <div class="cl">Mesh Centrale</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">Mesh Centrale</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Déploiement d'un réseau Mesh centralisé. Gestion unifiée des points d'accès, itinérance transparente et segmentation par SSID.</div>
-            <div class="btags"><span class="btag">OffSec</span><span class="btag">Certif.</span><span class="btag">Pentest</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/ADES-OSCP.pdf" data-title="Mesh Centrale" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/ADES-OSCP.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche RT / CEH" data-search="ceh ec-council certification hacking ethique">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/rt logo.png" alt="RT" loading="lazy"></div>
-            <div class="cl">RT</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">RT</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Certified Ethical Hacker EC-Council — maîtrise des techniques de hacking éthique, des outils offensifs majeurs et des contre-mesures défensives.</div>
-            <div class="btags"><span class="btag">EC-Council</span><span class="btag">CEH</span><span class="btag">Certif.</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/ADES-CEH.pdf" data-title="RT — CEH" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/ADES-CEH.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Support Utilisateurs" data-search="siem blue team ioc threat hunting">
         <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/support utilisateurs.webp" alt="Support Utilisateurs" loading="lazy"></div>
-            <div class="cl">Support Utilisateurs</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/support utilisateurs.webp" alt="Support Utilisateurs" loading="lazy"></div><div class="cl">Support Utilisateurs</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
             <div class="bh"><span class="bn">Support Utilisateurs</span><button class="bx" aria-label="Fermer">✕</button></div>
             <div class="bd">Projet avancé de chasse aux menaces — corrélation de logs SIEM, détection d'anomalies comportementales, IOCs et playbooks de réponse.</div>
             <div class="btags"><span class="btag">SIEM</span><span class="btag">Blue Team</span><span class="btag">IOC</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/ADES-Threat-Hunting.pdf" data-title="Support Utilisateurs" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/ADES-Threat-Hunting.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/ADES-Threat-Hunting.pdf" data-title="Support Utilisateurs" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/ADES-Threat-Hunting.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
+  <!-- Cyber > Réponse à incident -->
+  <div class="level-block subcat-block" data-cat="cyber" data-subcat="reponse-incident" style="--folder-color:rgba(255,100,130,.85)">
+    <div class="docs-heading"><div class="docs-badge">🚨</div><div class="docs-info"><div class="docs-name">Réponse à incident</div><div class="docs-count">1 document</div></div></div>
+    <div class="icons-grid">
       <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Préparation de poste" data-search="csirt ir plan post-mortem incident">
         <div class="fci">
-          <div class="ff">
-            <span class="ctype">DOCX</span>
-            <div class="ciw"><img src="assets/image/pc.jpg" alt="Préparation de poste" loading="lazy"></div>
-            <div class="cl">Préparation de poste</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
+          <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/pc.jpg" alt="Préparation de poste" loading="lazy"></div><div class="cl">Préparation de poste</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
             <div class="bh"><span class="bn">Préparation de poste</span><button class="bx" aria-label="Fermer">✕</button></div>
             <div class="bd">Plan de réponse aux incidents — procédures confinement, éradication, récupération, communication de crise et analyse post-mortem complète.</div>
             <div class="btags"><span class="btag">CSIRT</span><span class="btag">IR</span><span class="btag">Post-mortem</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/ADES-IR-Plan.docx" data-title="Préparation de poste" data-type="DOCX">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/ADES-IR-Plan.docx" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/ADES-IR-Plan.docx" data-title="Préparation de poste" data-type="DOCX">👁 Aperçu</button><a class="bcta" href="assets/docs/ADES-IR-Plan.docx" target="_blank" rel="noopener">↗ Ouvrir</a></div>
           </div>
         </div>
       </div>
-
     </div>
-  </section>
+  </div>
 
-  <!-- PROJETS PERSO -->
-  <section class="category" data-category="Projets Perso" style="--cat-color:rgba(240,171,252,.85)">
-    <div class="cat-header">
-      <div class="cat-badge">🚀</div>
-      <div class="cat-info">
-        <div class="cat-name">Projets Perso</div>
-        <div class="cat-count">2 documents · Homelab · CTF · Outils</div>
-      </div>
-      <div class="cat-idx">[ 05 / 05 ]</div>
-    </div>
+  <!-- Cyber > Hardening -->
+  <div class="level-block subcat-block" data-cat="cyber" data-subcat="hardening" style="--folder-color:rgba(255,100,130,.85)">
+    <div class="docs-heading"><div class="docs-badge">🔒</div><div class="docs-info"><div class="docs-name">Hardening</div><div class="docs-count">1 document</div></div></div>
     <div class="icons-grid">
-
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Homelab Setup" data-search="proxmox vlan grafana homelab">
-        <div class="fci">
-          <div class="ff">
-            <span class="ctype">PDF</span>
-            <div class="ciw"><img src="assets/image/homelab.webp" alt="Homelab Setup" loading="lazy"></div>
-            <div class="cl">Homelab Setup</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
-          <div class="fb">
-            <div class="bh"><span class="bn">Homelab Setup</span><button class="bx" aria-label="Fermer">✕</button></div>
-            <div class="bd">Architecture complète de mon homelab — hyperviseur Proxmox, VLANs segmentés, services auto-hébergés, monitoring Grafana et haute disponibilité.</div>
-            <div class="btags"><span class="btag">Proxmox</span><span class="btag">VLAN</span><span class="btag">Grafana</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/Perso-Homelab-Setup.pdf" data-title="Homelab Setup" data-type="PDF">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/Perso-Homelab-Setup.pdf" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Sécurisation Homelab" data-search="hardening ids ips pam pentest securite">
         <div class="fci">
-          <div class="ff">
-            <span class="ctype">DOCX</span>
-            <div class="ciw"><img src="assets/image/KALI.jpg" alt="Pentest" loading="lazy"></div>
-            <div class="cl">Pentest</div>
-            <span class="fhint">↻ retourner</span>
-          </div>
+          <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/KALI.jpg" alt="Sécurisation Homelab" loading="lazy"></div><div class="cl">Sécurisation Homelab</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
             <div class="bh"><span class="bn">Sécurisation Homelab</span><button class="bx" aria-label="Fermer">✕</button></div>
             <div class="bd">Durcissement du homelab — OS hardening, IDS/IPS Suricata, MFA, TLS Let's Encrypt, gestion des accès PAM et scan de vulnérabilités continu.</div>
             <div class="btags"><span class="btag">Hardening</span><span class="btag">IDS/IPS</span><span class="btag">PAM</span></div>
-            <div class="bactions">
-              <button class="bpreview" data-file="assets/docs/Perso-Homelab-Security.docx" data-title="Sécurisation Homelab" data-type="DOCX">👁 Aperçu</button>
-              <a class="bcta" href="assets/docs/Perso-Homelab-Security.docx" target="_blank" rel="noopener">↗ Ouvrir</a>
-            </div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/Perso-Homelab-Security.docx" data-title="Sécurisation Homelab" data-type="DOCX">👁 Aperçu</button><a class="bcta" href="assets/docs/Perso-Homelab-Security.docx" target="_blank" rel="noopener">↗ Ouvrir</a></div>
           </div>
         </div>
       </div>
-
     </div>
-  </section>
+  </div>
+
+  <!-- Réseaux > Administration systèmes -->
+  <div class="level-block subcat-block" data-cat="reseaux" data-subcat="admin-systemes" style="--folder-color:rgba(110,231,183,.85)">
+    <div class="docs-heading"><div class="docs-badge">🖥️</div><div class="docs-info"><div class="docs-name">Administration systèmes</div><div class="docs-count">3 documents</div></div></div>
+    <div class="icons-grid">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Active Directory" data-search="active directory windows ad gpo 1a">
+        <div class="fci">
+          <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/ACTIVE DIRECTORY.webp" alt="Active Directory" loading="lazy"></div><div class="cl">Active Directory</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">Active Directory</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Documentation complète sur la mise en place d'un Active Directory Windows Server. Gestion des GPO, unités d'organisation et politiques de sécurité avancées.</div>
+            <div class="btags"><span class="btag">Windows</span><span class="btag">AD</span><span class="btag">GPO</span><span class="btag">1A</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/AD.docx" data-title="Active Directory" data-type="DOCX">👁 Aperçu</button><a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Active Directory BTS" data-search="active directory windows fsmo ldap 1a bts">
+        <div class="fci">
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/ACTIVE DIRECTORY.webp" alt="Active Directory BTS" loading="lazy"></div><div class="cl">Active Directory BTS</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">Active Directory</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Étude et déploiement d'un Active Directory en BTS. Arborescence LDAP, rôles FSMO, réplication inter-sites et gestion fine des permissions.</div>
+            <div class="btags"><span class="btag">Windows</span><span class="btag">FSMO</span><span class="btag">LDAP</span><span class="btag">1A</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/AD.pdf" data-title="Active Directory (BTS)" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/AD.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche GLPI" data-search="glpi inventaire agent ticketing">
+        <div class="fci">
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/OIP.webp" alt="GLPI" loading="lazy"></div><div class="cl">GLPI</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">GLPI</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Installation et configuration de GLPI sur un serveur et un poste client. Inventaire automatisé via agent et gestion des tickets.</div>
+            <div class="btags"><span class="btag">Inventaire</span><span class="btag">Agent</span><span class="btag">Ticketing</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/BTS-Annee2-E4.pdf" data-title="GLPI" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/BTS-Annee2-E4.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Réseaux > Infrastructure & Virtualisation -->
+  <div class="level-block subcat-block" data-cat="reseaux" data-subcat="infra-virtu" style="--folder-color:rgba(110,231,183,.85)">
+    <div class="docs-heading"><div class="docs-badge">🗄️</div><div class="docs-info"><div class="docs-name">Infrastructure &amp; Virtualisation</div><div class="docs-count">5 documents</div></div></div>
+    <div class="icons-grid">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Backup" data-search="backup sauvegarde 3-2-1 1a">
+        <div class="fci">
+          <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/backup.webp" alt="Backup" loading="lazy"></div><div class="cl">Backup</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">Backup</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Mise en place d'une solution de sauvegarde automatisée. Politique de rétention 3-2-1, tests de restauration et supervision des jobs.</div>
+            <div class="btags"><span class="btag">Backup</span><span class="btag">3-2-1</span><span class="btag">1A</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/AD.docx" data-title="Backup" data-type="DOCX">👁 Aperçu</button><a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Supervision" data-search="supervision monitoring zabbix 1a">
+        <div class="fci">
+          <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/supervision.png" alt="Supervision" loading="lazy"></div><div class="cl">Supervision</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">Supervision</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Déploiement d'une infrastructure de supervision réseau et système. Alertes, tableaux de bord et corrélation d'événements.</div>
+            <div class="btags"><span class="btag">Monitoring</span><span class="btag">Zabbix</span><span class="btag">1A</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/AD.docx" data-title="Supervision" data-type="DOCX">👁 Aperçu</button><a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche VMware" data-search="vmware esxi virtualisation 1a">
+        <div class="fci">
+          <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/vmware.png" alt="VMware" loading="lazy"></div><div class="cl">VMware</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">VMware</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Installation et configuration d'un environnement VMware ESXi. Gestion des VMs, snapshots, vSwitchs et migrations à chaud.</div>
+            <div class="btags"><span class="btag">VMware</span><span class="btag">ESXi</span><span class="btag">1A</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/AD.docx" data-title="VMware" data-type="DOCX">👁 Aperçu</button><a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Hyper-V" data-search="hyperv hyper-v cluster windows 1a">
+        <div class="fci">
+          <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/hyperv.webp" alt="HyperV" loading="lazy"></div><div class="cl">HyperV</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">Hyper-V</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Mise en place d'une infrastructure de virtualisation Hyper-V. Réplication, clustering et haute disponibilité des machines virtuelles.</div>
+            <div class="btags"><span class="btag">Hyper-V</span><span class="btag">Windows</span><span class="btag">1A</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/AD.docx" data-title="Hyper-V" data-type="DOCX">👁 Aperçu</button><a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Homelab Setup" data-search="proxmox vlan grafana homelab">
+        <div class="fci">
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/homelab.webp" alt="Homelab Setup" loading="lazy"></div><div class="cl">Homelab Setup</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">Homelab Setup</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Architecture complète de mon homelab — hyperviseur Proxmox, VLANs segmentés, services auto-hébergés, monitoring Grafana et haute disponibilité.</div>
+            <div class="btags"><span class="btag">Proxmox</span><span class="btag">VLAN</span><span class="btag">Grafana</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/Perso-Homelab-Setup.pdf" data-title="Homelab Setup" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/Perso-Homelab-Setup.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Réseaux > Routage -->
+  <div class="level-block subcat-block" data-cat="reseaux" data-subcat="routage" style="--folder-color:rgba(110,231,183,.85)">
+    <div class="docs-heading"><div class="docs-badge">🛰️</div><div class="docs-info"><div class="docs-name">Routage</div><div class="docs-count">1 document</div></div></div>
+    <div class="icons-grid">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Routing" data-search="routing ospf bgp vlan reseau">
+        <div class="fci">
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/routing.webp" alt="Routing" loading="lazy"></div><div class="cl">Routing</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">Routing</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Configuration et documentation du routage réseau. Protocoles OSPF, BGP, et mise en place de VLANs inter-sites sécurisés.</div>
+            <div class="btags"><span class="btag">Routing</span><span class="btag">OSPF</span><span class="btag">BGP</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/Perso-Automation-Scripts.pdf" data-title="Routing" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/Perso-Automation-Scripts.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dev > Scripting -->
+  <div class="level-block subcat-block" data-cat="dev" data-subcat="scripting" style="--folder-color:rgba(103,232,249,.85)">
+    <div class="docs-heading"><div class="docs-badge">⚙️</div><div class="docs-info"><div class="docs-name">Scripting &amp; Automatisation</div><div class="docs-count">1 document</div></div></div>
+    <div class="icons-grid">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche PowerShell" data-search="powershell scripting automatisation 1a">
+        <div class="fci">
+          <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/powershell.png" alt="PowerShell" loading="lazy"></div><div class="cl">PowerShell</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">PowerShell</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Scripts PowerShell pour l'automatisation de tâches d'administration Windows. Gestion des utilisateurs AD, rapports et déploiements.</div>
+            <div class="btags"><span class="btag">PowerShell</span><span class="btag">Scripting</span><span class="btag">1A</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/AD.docx" data-title="PowerShell" data-type="DOCX">👁 Aperçu</button><a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pentest > CTF -->
+  <div class="level-block subcat-block" data-cat="pentest" data-subcat="ctf" style="--folder-color:rgba(167,139,250,.85)">
+    <div class="docs-heading"><div class="docs-badge">🚩</div><div class="docs-info"><div class="docs-name">CTF</div><div class="docs-count">1 document</div></div></div>
+    <div class="icons-grid">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche CTF" data-search="ctf hack capture the flag 1a">
+        <div class="fci">
+          <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/hackaton.webp" alt="CTF" loading="lazy"></div><div class="cl">CTF</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">CTF</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Capture The Flag — résolution de challenges offensifs en équipe. Exploitation web, cryptographie, forensics et reverse engineering.</div>
+            <div class="btags"><span class="btag">CTF</span><span class="btag">Hack</span><span class="btag">1A</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/AD.docx" data-title="CTF" data-type="DOCX">👁 Aperçu</button><a class="bcta" href="assets/docs/AD.docx" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pentest > Audit -->
+  <div class="level-block subcat-block" data-cat="pentest" data-subcat="audit" style="--folder-color:rgba(167,139,250,.85)">
+    <div class="docs-heading"><div class="docs-badge">🔬</div><div class="docs-info"><div class="docs-name">Audit</div><div class="docs-count">2 documents</div></div></div>
+    <div class="icons-grid">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Audit Infrastructure" data-search="audit infrastructure cvss reseau">
+        <div class="fci">
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/ACTIVE DIRECTORY.webp" alt="Audit Infrastructure" loading="lazy"></div><div class="cl">Audit Infrastructure</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">Audit Infra</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Audit complet de l'infrastructure réseau et système. Identification des failles critiques, scoring CVSS et recommandations de remédiation priorisées.</div>
+            <div class="btags"><span class="btag">Audit</span><span class="btag">CVSS</span><span class="btag">Réseau</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/APRES-Audit-Infrastructure.pdf" data-title="Audit Infrastructure" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/APRES-Audit-Infrastructure.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Audit Application Web" data-search="owasp xss sqli audit application web">
+        <div class="fci">
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/zabbix-logo-image.png" alt="Audit Application Web" loading="lazy"></div><div class="cl">Audit App Web</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">Audit App Web</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Audit sécurité application web selon OWASP Top 10 — SQLi, XSS, CSRF, IDOR, misconfigurations et rapport de vulnérabilités avec PoC.</div>
+            <div class="btags"><span class="btag">OWASP</span><span class="btag">XSS</span><span class="btag">SQLi</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/APRES-Audit-Application.pdf" data-title="Audit Application Web" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/APRES-Audit-Application.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pentest > Red Team -->
+  <div class="level-block subcat-block" data-cat="pentest" data-subcat="red-team" style="--folder-color:rgba(167,139,250,.85)">
+    <div class="docs-heading"><div class="docs-badge">💣</div><div class="docs-info"><div class="docs-name">Red Team</div><div class="docs-count">1 document</div></div></div>
+    <div class="icons-grid">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Pentest Final" data-search="pentest red team exploit rapport">
+        <div class="fci">
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/pentest.webp" alt="Pentest" loading="lazy"></div><div class="cl">Pentest</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">Pentest Final</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Rapport de test d'intrusion complet — mission Red Team, chaîne d'exploitation, preuves et plan de remédiation hiérarchisé par criticité.</div>
+            <div class="btags"><span class="btag">Red Team</span><span class="btag">Exploit</span><span class="btag">Rapport</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/APRES-Pentest-Final.pdf" data-title="Pentest Final" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/APRES-Pentest-Final.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pentest > Certifications -->
+  <div class="level-block subcat-block" data-cat="pentest" data-subcat="certifications" style="--folder-color:rgba(167,139,250,.85)">
+    <div class="docs-heading"><div class="docs-badge">🏆</div><div class="docs-info"><div class="docs-name">Certifications</div><div class="docs-count">2 documents</div></div></div>
+    <div class="icons-grid">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Mesh Centrale" data-search="mesh centrale offsec certification pentest oscp">
+        <div class="fci">
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/mesh centrale.png" alt="Mesh Centrale" loading="lazy"></div><div class="cl">Mesh Centrale</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">Mesh Centrale</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Déploiement d'un réseau Mesh centralisé. Gestion unifiée des points d'accès, itinérance transparente et segmentation par SSID.</div>
+            <div class="btags"><span class="btag">OffSec</span><span class="btag">Certif.</span><span class="btag">Pentest</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/ADES-OSCP.pdf" data-title="Mesh Centrale" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/ADES-OSCP.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche RT / CEH" data-search="ceh ec-council certification hacking ethique">
+        <div class="fci">
+          <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/rt logo.png" alt="RT" loading="lazy"></div><div class="cl">RT</div><span class="fhint">↻ retourner</span></div>
+          <div class="fb">
+            <div class="bh"><span class="bn">RT</span><button class="bx" aria-label="Fermer">✕</button></div>
+            <div class="bd">Certified Ethical Hacker EC-Council — maîtrise des techniques de hacking éthique, des outils offensifs majeurs et des contre-mesures défensives.</div>
+            <div class="btags"><span class="btag">EC-Council</span><span class="btag">CEH</span><span class="btag">Certif.</span></div>
+            <div class="bactions"><button class="bpreview" data-file="assets/docs/ADES-CEH.pdf" data-title="RT — CEH" data-type="PDF">👁 Aperçu</button><a class="bcta" href="assets/docs/ADES-CEH.pdf" target="_blank" rel="noopener">↗ Ouvrir</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </main>
 
@@ -970,19 +1004,109 @@ themeToggle.addEventListener('click', () => {
 });
 
 // ═══════════════════════════════
-// FLIP CARDS — un seul élément ouvert à la fois, jamais de chevauchement
+// NAVIGATION PAR DOSSIERS (Catégories > Sous-catégories > Documents)
+// ═══════════════════════════════
+const CAT_NAMES = { cyber:'Cybersécurité', reseaux:'Réseaux', dev:'Développement', ia:'IA', pentest:'Pentest' };
+const SUB_NAMES = {
+  'analyse-risques':'Analyse de risques','securite-reseau':'Sécurité réseau','blue-team':'Blue Team / SOC',
+  'reponse-incident':'Réponse à incident','hardening':'Hardening',
+  'admin-systemes':'Administration systèmes','infra-virtu':'Infrastructure & Virtualisation','routage':'Routage',
+  'scripting':'Scripting & Automatisation',
+  'ctf':'CTF','audit':'Audit','red-team':'Red Team','certifications':'Certifications'
+};
+
+const levelCategories = document.getElementById('levelCategories');
+const catBlocks = document.querySelectorAll('.level-block[id^="cat-"]');
+const subcatBlocks = document.querySelectorAll('.subcat-block');
+const breadcrumb = document.getElementById('breadcrumb');
+const crumbRoot = document.getElementById('crumbRoot');
+const crumbCat  = document.getElementById('crumbCat');
+const crumbSub  = document.getElementById('crumbSub');
+const sep1 = document.getElementById('sep1');
+const sep2 = document.getElementById('sep2');
+const statsBlock = document.getElementById('statsBlock');
+
+let state = { cat:null, subcat:null };
+
+function hideAllLevels() {
+  levelCategories.classList.remove('active');
+  catBlocks.forEach(b => b.classList.remove('active'));
+  subcatBlocks.forEach(b => b.classList.remove('active'));
+}
+
+function renderBreadcrumb() {
+  if (!state.cat) {
+    sep1.style.display='none'; crumbCat.style.display='none';
+    sep2.style.display='none'; crumbSub.style.display='none';
+    return;
+  }
+  sep1.style.display='inline'; crumbCat.style.display='inline-flex';
+  crumbCat.textContent = CAT_NAMES[state.cat] || state.cat;
+  if (state.subcat) {
+    sep2.style.display='inline'; crumbSub.style.display='inline-flex';
+    crumbSub.textContent = SUB_NAMES[state.subcat] || state.subcat;
+  } else {
+    sep2.style.display='none'; crumbSub.style.display='none';
+  }
+}
+
+function goToRoot() {
+  state = { cat:null, subcat:null };
+  hideAllLevels();
+  levelCategories.classList.add('active');
+  statsBlock.style.display = 'flex';
+  renderBreadcrumb();
+  clearSearchUI();
+}
+
+function goToCategory(cat) {
+  state = { cat, subcat:null };
+  hideAllLevels();
+  const block = document.getElementById('cat-' + cat);
+  if (block) block.classList.add('active');
+  statsBlock.style.display = 'none';
+  renderBreadcrumb();
+  clearSearchUI();
+}
+
+function goToSubcat(cat, subcat) {
+  state = { cat, subcat };
+  hideAllLevels();
+  const block = document.querySelector('.subcat-block[data-cat="'+cat+'"][data-subcat="'+subcat+'"]');
+  if (block) block.classList.add('active');
+  statsBlock.style.display = 'none';
+  renderBreadcrumb();
+  clearSearchUI();
+}
+
+function clearSearchUI() {
+  searchInput.value = '';
+  searchWrap.classList.remove('has-text');
+  searchMeta.innerHTML = '';
+  emptyState.classList.remove('show');
+  allCards.forEach(c => c.classList.remove('card-hidden'));
+}
+
+crumbRoot.addEventListener('click', goToRoot);
+crumbCat.addEventListener('click', () => goToCategory(state.cat));
+
+document.querySelectorAll('.folder-card[data-cat]:not([data-subcat])').forEach(card => {
+  const activate = () => goToCategory(card.dataset.cat);
+  card.addEventListener('click', activate);
+  card.addEventListener('keydown', e => { if (e.key==='Enter' || e.key===' ') { e.preventDefault(); activate(); } });
+});
+document.querySelectorAll('.folder-card.sub[data-subcat]').forEach(card => {
+  const activate = () => goToSubcat(card.dataset.cat, card.dataset.subcat);
+  card.addEventListener('click', activate);
+  card.addEventListener('keydown', e => { if (e.key==='Enter' || e.key===' ') { e.preventDefault(); activate(); } });
+});
+
+// ═══════════════════════════════
+// FLIP CARDS — un seul élément ouvert à la fois
 // ═══════════════════════════════
 let openCard = null;
-
-function closeOpenCard() {
-  if (openCard) { openCard.classList.remove('open'); openCard = null; }
-}
-
-function openCardEl(card) {
-  if (openCard && openCard !== card) closeOpenCard();
-  card.classList.add('open');
-  openCard = card;
-}
+function closeOpenCard() { if (openCard) { openCard.classList.remove('open'); openCard = null; } }
+function openCardEl(card) { if (openCard && openCard !== card) closeOpenCard(); card.classList.add('open'); openCard = card; }
 
 document.querySelectorAll('.fc').forEach(card => {
   const front = card.querySelector('.ff');
@@ -990,21 +1114,14 @@ document.querySelectorAll('.fc').forEach(card => {
   const previewBtn = card.querySelector('.bpreview');
   const ctaLink = card.querySelector('.bcta');
 
-  front.addEventListener('click', () => {
-    if (card.classList.contains('open')) { closeOpenCard(); }
-    else { openCardEl(card); }
-  });
-
-  // Activation clavier (Enter / Espace) sur la carte focusable
+  front.addEventListener('click', () => { card.classList.contains('open') ? closeOpenCard() : openCardEl(card); });
   card.addEventListener('keydown', e => {
     if (document.activeElement !== card) return;
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      if (card.classList.contains('open')) closeOpenCard();
-      else openCardEl(card);
+      card.classList.contains('open') ? closeOpenCard() : openCardEl(card);
     }
   });
-
   closeBtn.addEventListener('click', e => { e.stopPropagation(); closeOpenCard(); });
   ctaLink.addEventListener('click', e => e.stopPropagation());
   previewBtn.addEventListener('click', e => {
@@ -1012,11 +1129,7 @@ document.querySelectorAll('.fc').forEach(card => {
     openPreview(previewBtn.dataset.file, previewBtn.dataset.title, previewBtn.dataset.type);
   });
 });
-
-// Fermer la carte ouverte si on clique en dehors de toute carte
-document.addEventListener('click', e => {
-  if (openCard && !openCard.contains(e.target)) closeOpenCard();
-});
+document.addEventListener('click', e => { if (openCard && !openCard.contains(e.target)) closeOpenCard(); });
 
 // ═══════════════════════════════
 // MODAL APERÇU
@@ -1036,47 +1149,37 @@ function openPreview(file, title, type) {
   modalOpenNew.href = file;
   modalFallback.classList.remove('show');
   modalIframe.style.display = 'block';
-
   if (type === 'PDF') {
     modalIframe.src = file;
   } else {
-    // DOCX et autres formats non-natifs au navigateur : pas de rendu fiable en iframe directe,
-    // on affiche le message de repli plutôt qu'une page blanche trompeuse.
     modalIframe.src = 'about:blank';
     modalIframe.style.display = 'none';
     modalFallback.classList.add('show');
   }
-
   modalOverlay.classList.add('show');
   document.body.classList.add('modal-lock');
 }
-
 function closePreview() {
   modalOverlay.classList.remove('show');
   document.body.classList.remove('modal-lock');
   modalIframe.src = 'about:blank';
 }
-
 modalClose.addEventListener('click', closePreview);
 modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closePreview(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && modalOverlay.classList.contains('show')) closePreview(); });
 
 // ═══════════════════════════════
-// RECHERCHE TEXTE
+// RECHERCHE — traverse tous les dossiers, quel que soit le niveau
 // ═══════════════════════════════
 const searchInput = document.getElementById('searchInput');
 const searchClear = document.getElementById('searchClear');
 const searchWrap   = document.getElementById('searchWrap');
 const searchMeta   = document.getElementById('searchMeta');
 const emptyState   = document.getElementById('emptyState');
-const statsBlock   = document.getElementById('statsBlock');
 const allCards     = Array.from(document.querySelectorAll('.fc'));
-const allCategories = Array.from(document.querySelectorAll('.category'));
 const totalDocs = allCards.length;
 
-function normalize(str) {
-  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-}
+function normalize(str) { return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 
 function runSearch() {
   const raw = searchInput.value.trim();
@@ -1084,28 +1187,35 @@ function runSearch() {
   searchWrap.classList.toggle('has-text', raw.length > 0);
 
   if (!q) {
+    // Retour à la navigation par dossiers, sans re-render de niveau
     allCards.forEach(c => c.classList.remove('card-hidden'));
-    allCategories.forEach(cat => cat.classList.remove('cat-hidden'));
     emptyState.classList.remove('show');
-    statsBlock.style.display = 'flex';
     searchMeta.innerHTML = '';
+    if (!state.cat && !state.subcat) { statsBlock.style.display = 'flex'; }
+    hideAllLevels();
+    if (state.subcat) { document.querySelector('.subcat-block[data-cat="'+state.cat+'"][data-subcat="'+state.subcat+'"]').classList.add('active'); }
+    else if (state.cat) { document.getElementById('cat-'+state.cat).classList.add('active'); }
+    else { levelCategories.classList.add('active'); }
     closeOpenCard();
     return;
   }
 
+  // Mode recherche globale : on affiche tous les blocs de documents et on filtre
+  hideAllLevels();
+  subcatBlocks.forEach(b => b.classList.add('active'));
   statsBlock.style.display = 'none';
-  let visibleCount = 0;
 
-  allCategories.forEach(cat => {
-    let catHasVisible = false;
-    cat.querySelectorAll('.fc').forEach(card => {
+  let visibleCount = 0;
+  subcatBlocks.forEach(block => {
+    let blockHasVisible = false;
+    block.querySelectorAll('.fc').forEach(card => {
       const title = normalize(card.querySelector('.cl').textContent);
       const searchData = normalize(card.dataset.search || '');
       const match = title.includes(q) || searchData.includes(q);
       card.classList.toggle('card-hidden', !match);
-      if (match) { catHasVisible = true; visibleCount++; }
+      if (match) { blockHasVisible = true; visibleCount++; }
     });
-    cat.classList.toggle('cat-hidden', !catHasVisible);
+    block.classList.toggle('active', blockHasVisible);
   });
 
   closeOpenCard();
@@ -1123,6 +1233,9 @@ document.addEventListener('keydown', e => {
     searchInput.focus();
   }
 });
+
+// Init
+renderBreadcrumb();
 </script>
 </body>
 </html>
