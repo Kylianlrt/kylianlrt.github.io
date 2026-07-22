@@ -187,6 +187,14 @@ main { padding:140px 24px 80px;position:relative;z-index:2;max-width:1100px;marg
 .folder-card.sub .folder-icon-wrap { width:46px;height:46px;font-size:1.3rem;margin-bottom:12px; }
 .folder-card.sub .folder-name { font-size:.94rem; }
 
+/* Écran de choix OS */
+.os-grid { max-width:640px;margin:0 auto;grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:24px; }
+.folder-card.os-card { padding:40px 28px;text-align:center; }
+.folder-card.os-card .folder-icon-wrap { width:76px;height:76px;font-size:2.3rem;margin:0 auto 18px; }
+.folder-card.os-card .folder-name { font-size:1.35rem; }
+.folder-card.os-card .folder-sub { margin-bottom:14px; }
+.os-intro { text-align:center;color:var(--text-muted);font-size:.85rem;margin-bottom:28px;font-style:italic; }
+
 .level-block { display:none; }
 .level-block.active { display:block; }
 
@@ -432,7 +440,9 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
 
   <!-- BREADCRUMB -->
   <div class="breadcrumb" id="breadcrumb">
-    <button class="crumb-btn" id="crumbRoot">📁 Catégories</button>
+    <button class="crumb-btn" id="crumbRoot">🗂️ Système</button>
+    <span class="crumb-sep" id="sep0" style="display:none;">/</span>
+    <button class="crumb-btn" id="crumbOS" style="display:none;"></button>
     <span class="crumb-sep" id="sep1" style="display:none;">/</span>
     <button class="crumb-btn" id="crumbCat" style="display:none;"></button>
     <span class="crumb-sep" id="sep2" style="display:none;">/</span>
@@ -445,8 +455,30 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
     <div class="empty-sub">Essaie un autre mot-clé, ou efface la recherche pour tout revoir.</div>
   </div>
 
+  <!-- ══════════════ NIVEAU -1 : CHOIX DE L'OS ══════════════ -->
+  <div class="level-block active" id="levelOS">
+    <p class="os-intro">Commence par choisir l'environnement qui t'intéresse</p>
+    <div class="folder-grid os-grid">
+
+      <div class="folder-card os-card" tabindex="0" role="button" data-os-choice="linux" style="--folder-color:rgba(251,191,36,.85)">
+        <div class="folder-icon-wrap">🐧</div>
+        <div class="folder-name">Linux</div>
+        <div class="folder-sub">Distributions &amp; outils open-source</div>
+        <div class="folder-count" id="countLinux">— documents</div>
+      </div>
+
+      <div class="folder-card os-card" tabindex="0" role="button" data-os-choice="windows" style="--folder-color:rgba(103,232,249,.85)">
+        <div class="folder-icon-wrap">🪟</div>
+        <div class="folder-name">Windows</div>
+        <div class="folder-sub">Environnement Microsoft</div>
+        <div class="folder-count" id="countWindows">— documents</div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ══════════════ NIVEAU 0 : CATÉGORIES ══════════════ -->
-  <div class="level-block active" id="levelCategories">
+  <div class="level-block" id="levelCategories">
     <div class="folder-grid">
 
       <div class="folder-card" tabindex="0" role="button" data-cat="cyber" style="--folder-color:rgba(255,100,130,.85)">
@@ -611,7 +643,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="cyber" data-subcat="analyse-risques" style="--folder-color:rgba(255,100,130,.85)">
     <div class="docs-heading"><div class="docs-badge">📊</div><div class="docs-info"><div class="docs-name">Analyse de risques</div><div class="docs-count">1 document</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Rapport Sécurité" data-search="python securite risques rapport 1a">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Rapport Sécurité" data-os="both" data-search="python securite risques rapport 1a">
         <div class="fci">
           <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/f5643096750899.5eb54f3381b8f.png" alt="Rapport Sécurité" loading="lazy"></div><div class="cl">Rapport Sécurité</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -629,7 +661,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="cyber" data-subcat="securite-reseau" style="--folder-color:rgba(255,100,130,.85)">
     <div class="docs-heading"><div class="docs-badge">🧱</div><div class="docs-info"><div class="docs-name">Sécurité réseau</div><div class="docs-count">2 documents</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche DMZ" data-search="dmz reseau firewall demilitarisee 1a">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche DMZ" data-os="both" data-search="dmz reseau firewall demilitarisee 1a">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/DMZ.webp" alt="DMZ" loading="lazy"></div><div class="cl">DMZ</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -640,7 +672,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
           </div>
         </div>
       </div>
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche PFsense" data-search="pfsense routing firewall vpn dmz">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche PFsense" data-os="linux" data-search="pfsense routing firewall vpn dmz">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/pfsense.webp" alt="PFsense" loading="lazy"></div><div class="cl">PFsense</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -658,7 +690,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="cyber" data-subcat="blue-team" style="--folder-color:rgba(255,100,130,.85)">
     <div class="docs-heading"><div class="docs-badge">🕵️</div><div class="docs-info"><div class="docs-name">Blue Team / SOC</div><div class="docs-count">2 documents</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Wireshark" data-search="wireshark detection intrusion stage e6 2a">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Wireshark" data-os="both" data-search="wireshark detection intrusion stage e6 2a">
         <div class="fci">
           <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/Untitled-design-2.png" alt="Wireshark" loading="lazy"></div><div class="cl">Wireshark</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -669,7 +701,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
           </div>
         </div>
       </div>
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Support Utilisateurs" data-search="siem blue team ioc threat hunting">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Support Utilisateurs" data-os="both" data-search="siem blue team ioc threat hunting">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/support utilisateurs.webp" alt="Support Utilisateurs" loading="lazy"></div><div class="cl">Support Utilisateurs</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -687,7 +719,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="cyber" data-subcat="reponse-incident" style="--folder-color:rgba(255,100,130,.85)">
     <div class="docs-heading"><div class="docs-badge">🚨</div><div class="docs-info"><div class="docs-name">Réponse à incident</div><div class="docs-count">1 document</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Préparation de poste" data-search="csirt ir plan post-mortem incident">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Préparation de poste" data-os="both" data-search="csirt ir plan post-mortem incident">
         <div class="fci">
           <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/pc.jpg" alt="Préparation de poste" loading="lazy"></div><div class="cl">Préparation de poste</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -705,7 +737,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="cyber" data-subcat="hardening" style="--folder-color:rgba(255,100,130,.85)">
     <div class="docs-heading"><div class="docs-badge">🔒</div><div class="docs-info"><div class="docs-name">Hardening</div><div class="docs-count">1 document</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Sécurisation Homelab" data-search="hardening ids ips pam pentest securite">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Sécurisation Homelab" data-os="linux" data-search="hardening ids ips pam pentest securite">
         <div class="fci">
           <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/KALI.jpg" alt="Sécurisation Homelab" loading="lazy"></div><div class="cl">Sécurisation Homelab</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -723,7 +755,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="reseaux" data-subcat="admin-systemes" style="--folder-color:rgba(110,231,183,.85)">
     <div class="docs-heading"><div class="docs-badge">🖥️</div><div class="docs-info"><div class="docs-name">Administration systèmes</div><div class="docs-count">3 documents</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Active Directory" data-search="active directory windows ad gpo 1a">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Active Directory" data-os="windows" data-search="active directory windows ad gpo 1a">
         <div class="fci">
           <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/ACTIVE DIRECTORY.webp" alt="Active Directory" loading="lazy"></div><div class="cl">Active Directory</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -734,7 +766,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
           </div>
         </div>
       </div>
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Active Directory BTS" data-search="active directory windows fsmo ldap 1a bts">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Active Directory BTS" data-os="windows" data-search="active directory windows fsmo ldap 1a bts">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/ACTIVE DIRECTORY.webp" alt="Active Directory BTS" loading="lazy"></div><div class="cl">Active Directory BTS</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -745,7 +777,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
           </div>
         </div>
       </div>
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche GLPI" data-search="glpi inventaire agent ticketing">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche GLPI" data-os="both" data-search="glpi inventaire agent ticketing">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/OIP.webp" alt="GLPI" loading="lazy"></div><div class="cl">GLPI</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -763,7 +795,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="reseaux" data-subcat="infra-virtu" style="--folder-color:rgba(110,231,183,.85)">
     <div class="docs-heading"><div class="docs-badge">🗄️</div><div class="docs-info"><div class="docs-name">Infrastructure &amp; Virtualisation</div><div class="docs-count">5 documents</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Backup" data-search="backup sauvegarde 3-2-1 1a">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Backup" data-os="both" data-search="backup sauvegarde 3-2-1 1a">
         <div class="fci">
           <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/backup.webp" alt="Backup" loading="lazy"></div><div class="cl">Backup</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -774,7 +806,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
           </div>
         </div>
       </div>
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Supervision" data-search="supervision monitoring zabbix 1a">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Supervision" data-os="both" data-search="supervision monitoring zabbix 1a">
         <div class="fci">
           <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/supervision.png" alt="Supervision" loading="lazy"></div><div class="cl">Supervision</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -785,7 +817,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
           </div>
         </div>
       </div>
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche VMware" data-search="vmware esxi virtualisation 1a">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche VMware" data-os="both" data-search="vmware esxi virtualisation 1a">
         <div class="fci">
           <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/vmware.png" alt="VMware" loading="lazy"></div><div class="cl">VMware</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -796,7 +828,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
           </div>
         </div>
       </div>
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Hyper-V" data-search="hyperv hyper-v cluster windows 1a">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Hyper-V" data-os="windows" data-search="hyperv hyper-v cluster windows 1a">
         <div class="fci">
           <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/hyperv.webp" alt="HyperV" loading="lazy"></div><div class="cl">HyperV</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -807,7 +839,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
           </div>
         </div>
       </div>
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Homelab Setup" data-search="proxmox vlan grafana homelab">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Homelab Setup" data-os="linux" data-search="proxmox vlan grafana homelab">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/homelab.webp" alt="Homelab Setup" loading="lazy"></div><div class="cl">Homelab Setup</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -825,7 +857,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="reseaux" data-subcat="routage" style="--folder-color:rgba(110,231,183,.85)">
     <div class="docs-heading"><div class="docs-badge">🛰️</div><div class="docs-info"><div class="docs-name">Routage</div><div class="docs-count">1 document</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Routing" data-search="routing ospf bgp vlan reseau">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Routing" data-os="both" data-search="routing ospf bgp vlan reseau">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/routing.webp" alt="Routing" loading="lazy"></div><div class="cl">Routing</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -843,7 +875,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="dev" data-subcat="scripting" style="--folder-color:rgba(103,232,249,.85)">
     <div class="docs-heading"><div class="docs-badge">⚙️</div><div class="docs-info"><div class="docs-name">Scripting &amp; Automatisation</div><div class="docs-count">1 document</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche PowerShell" data-search="powershell scripting automatisation 1a">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche PowerShell" data-os="windows" data-search="powershell scripting automatisation 1a">
         <div class="fci">
           <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/powershell.png" alt="PowerShell" loading="lazy"></div><div class="cl">PowerShell</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -861,7 +893,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="pentest" data-subcat="ctf" style="--folder-color:rgba(167,139,250,.85)">
     <div class="docs-heading"><div class="docs-badge">🚩</div><div class="docs-info"><div class="docs-name">CTF</div><div class="docs-count">1 document</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche CTF" data-search="ctf hack capture the flag 1a">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche CTF" data-os="both" data-search="ctf hack capture the flag 1a">
         <div class="fci">
           <div class="ff"><span class="ctype">DOCX</span><div class="ciw"><img src="assets/image/hackaton.webp" alt="CTF" loading="lazy"></div><div class="cl">CTF</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -879,7 +911,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="pentest" data-subcat="audit" style="--folder-color:rgba(167,139,250,.85)">
     <div class="docs-heading"><div class="docs-badge">🔬</div><div class="docs-info"><div class="docs-name">Audit</div><div class="docs-count">2 documents</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Audit Infrastructure" data-search="audit infrastructure cvss reseau">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Audit Infrastructure" data-os="both" data-search="audit infrastructure cvss reseau">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/ACTIVE DIRECTORY.webp" alt="Audit Infrastructure" loading="lazy"></div><div class="cl">Audit Infrastructure</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -890,7 +922,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
           </div>
         </div>
       </div>
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Audit Application Web" data-search="owasp xss sqli audit application web">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Audit Application Web" data-os="both" data-search="owasp xss sqli audit application web">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/zabbix-logo-image.png" alt="Audit Application Web" loading="lazy"></div><div class="cl">Audit App Web</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -908,7 +940,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="pentest" data-subcat="red-team" style="--folder-color:rgba(167,139,250,.85)">
     <div class="docs-heading"><div class="docs-badge">💣</div><div class="docs-info"><div class="docs-name">Red Team</div><div class="docs-count">1 document</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Pentest Final" data-search="pentest red team exploit rapport">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Pentest Final" data-os="both" data-search="pentest red team exploit rapport">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/pentest.webp" alt="Pentest" loading="lazy"></div><div class="cl">Pentest</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -926,7 +958,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
   <div class="level-block subcat-block" data-cat="pentest" data-subcat="certifications" style="--folder-color:rgba(167,139,250,.85)">
     <div class="docs-heading"><div class="docs-badge">🏆</div><div class="docs-info"><div class="docs-name">Certifications</div><div class="docs-count">2 documents</div></div></div>
     <div class="icons-grid">
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Mesh Centrale" data-search="mesh centrale offsec certification pentest oscp">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche Mesh Centrale" data-os="linux" data-search="mesh centrale offsec certification pentest oscp">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/mesh centrale.png" alt="Mesh Centrale" loading="lazy"></div><div class="cl">Mesh Centrale</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -937,7 +969,7 @@ body.light-mode footer { background:rgba(237,233,254,.9); }
           </div>
         </div>
       </div>
-      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche RT / CEH" data-search="ceh ec-council certification hacking ethique">
+      <div class="fc" tabindex="0" role="button" aria-label="Ouvrir la fiche RT / CEH" data-os="both" data-search="ceh ec-council certification hacking ethique">
         <div class="fci">
           <div class="ff"><span class="ctype">PDF</span><div class="ciw"><img src="assets/image/rt logo.png" alt="RT" loading="lazy"></div><div class="cl">RT</div><span class="fhint">↻ retourner</span></div>
           <div class="fb">
@@ -1015,26 +1047,52 @@ const SUB_NAMES = {
   'ctf':'CTF','audit':'Audit','red-team':'Red Team','certifications':'Certifications'
 };
 
+const OS_NAMES = { linux:'🐧 Linux', windows:'🪟 Windows' };
+
+const levelOS = document.getElementById('levelOS');
 const levelCategories = document.getElementById('levelCategories');
 const catBlocks = document.querySelectorAll('.level-block[id^="cat-"]');
 const subcatBlocks = document.querySelectorAll('.subcat-block');
 const breadcrumb = document.getElementById('breadcrumb');
 const crumbRoot = document.getElementById('crumbRoot');
+const crumbOS   = document.getElementById('crumbOS');
 const crumbCat  = document.getElementById('crumbCat');
 const crumbSub  = document.getElementById('crumbSub');
+const sep0 = document.getElementById('sep0');
 const sep1 = document.getElementById('sep1');
 const sep2 = document.getElementById('sep2');
 const statsBlock = document.getElementById('statsBlock');
 
-let state = { cat:null, subcat:null };
+let state = { os:null, cat:null, subcat:null };
+
+// Un document "both" compte pour les deux OS
+function matchesOS(fc, os) {
+  const fos = fc.dataset.os;
+  return fos === 'both' || fos === os;
+}
+
+function countForOS(container, os) {
+  let n = 0;
+  container.querySelectorAll('.fc').forEach(fc => { if (matchesOS(fc, os)) n++; });
+  return n;
+}
 
 function hideAllLevels() {
+  levelOS.classList.remove('active');
   levelCategories.classList.remove('active');
   catBlocks.forEach(b => b.classList.remove('active'));
   subcatBlocks.forEach(b => b.classList.remove('active'));
 }
 
 function renderBreadcrumb() {
+  if (!state.os) {
+    sep0.style.display='none'; crumbOS.style.display='none';
+    sep1.style.display='none'; crumbCat.style.display='none';
+    sep2.style.display='none'; crumbSub.style.display='none';
+    return;
+  }
+  sep0.style.display='inline'; crumbOS.style.display='inline-flex';
+  crumbOS.textContent = OS_NAMES[state.os] || state.os;
   if (!state.cat) {
     sep1.style.display='none'; crumbCat.style.display='none';
     sep2.style.display='none'; crumbSub.style.display='none';
@@ -1051,29 +1109,76 @@ function renderBreadcrumb() {
 }
 
 function goToRoot() {
-  state = { cat:null, subcat:null };
+  state = { os:null, cat:null, subcat:null };
   hideAllLevels();
-  levelCategories.classList.add('active');
+  levelOS.classList.add('active');
   statsBlock.style.display = 'flex';
+  searchWrap.style.display = 'none';
+  updateOSCounts();
   renderBreadcrumb();
   clearSearchUI();
 }
 
+function updateOSCounts() {
+  document.getElementById('countLinux').textContent = countForOS(document, 'linux') + ' documents';
+  document.getElementById('countWindows').textContent = countForOS(document, 'windows') + ' documents';
+}
+
+function selectOS(os) {
+  state = { os, cat:null, subcat:null };
+  hideAllLevels();
+  levelCategories.classList.add('active');
+  statsBlock.style.display = 'none';
+  searchWrap.style.display = 'block';
+  updateCategoryCounts(os);
+  renderBreadcrumb();
+  clearSearchUI();
+}
+
+function updateCategoryCounts(os) {
+  document.querySelectorAll('.folder-card[data-cat]:not(.sub)').forEach(card => {
+    const cat = card.dataset.cat;
+    const countEl = card.querySelector('.folder-count');
+    if (cat === 'ia') { return; } // toujours "Bientôt disponible"
+    let total = 0;
+    document.querySelectorAll('.subcat-block[data-cat="'+cat+'"]').forEach(block => { total += countForOS(block, os); });
+    countEl.textContent = total + (total > 1 ? ' documents' : ' document');
+    countEl.classList.toggle('is-empty', total === 0);
+    card.style.display = total === 0 ? 'none' : '';
+  });
+}
+
 function goToCategory(cat) {
-  state = { cat, subcat:null };
+  state = { os: state.os, cat, subcat:null };
   hideAllLevels();
   const block = document.getElementById('cat-' + cat);
   if (block) block.classList.add('active');
   statsBlock.style.display = 'none';
+  if (cat !== 'ia') updateSubcatCounts(cat, state.os);
   renderBreadcrumb();
   clearSearchUI();
 }
 
+function updateSubcatCounts(cat, os) {
+  document.querySelectorAll('.folder-card.sub[data-cat="'+cat+'"]').forEach(card => {
+    const subcat = card.dataset.subcat;
+    const countEl = card.querySelector('.folder-count');
+    const block = document.querySelector('.subcat-block[data-cat="'+cat+'"][data-subcat="'+subcat+'"]');
+    const total = block ? countForOS(block, os) : 0;
+    countEl.textContent = total + (total > 1 ? ' documents' : ' document');
+    countEl.classList.toggle('is-empty', total === 0);
+    card.style.display = total === 0 ? 'none' : '';
+  });
+}
+
 function goToSubcat(cat, subcat) {
-  state = { cat, subcat };
+  state = { os: state.os, cat, subcat };
   hideAllLevels();
   const block = document.querySelector('.subcat-block[data-cat="'+cat+'"][data-subcat="'+subcat+'"]');
-  if (block) block.classList.add('active');
+  if (block) {
+    block.classList.add('active');
+    block.querySelectorAll('.fc').forEach(fc => fc.classList.toggle('card-hidden', !matchesOS(fc, state.os)));
+  }
   statsBlock.style.display = 'none';
   renderBreadcrumb();
   clearSearchUI();
@@ -1084,12 +1189,23 @@ function clearSearchUI() {
   searchWrap.classList.remove('has-text');
   searchMeta.innerHTML = '';
   emptyState.classList.remove('show');
-  allCards.forEach(c => c.classList.remove('card-hidden'));
+  if (state.subcat) {
+    const block = document.querySelector('.subcat-block[data-cat="'+state.cat+'"][data-subcat="'+state.subcat+'"]');
+    if (block) block.querySelectorAll('.fc').forEach(fc => fc.classList.toggle('card-hidden', !matchesOS(fc, state.os)));
+  } else {
+    allCards.forEach(c => c.classList.remove('card-hidden'));
+  }
 }
 
 crumbRoot.addEventListener('click', goToRoot);
+crumbOS.addEventListener('click', () => selectOS(state.os));
 crumbCat.addEventListener('click', () => goToCategory(state.cat));
 
+document.querySelectorAll('.folder-card[data-os-choice]').forEach(card => {
+  const activate = () => selectOS(card.dataset.osChoice);
+  card.addEventListener('click', activate);
+  card.addEventListener('keydown', e => { if (e.key==='Enter' || e.key===' ') { e.preventDefault(); activate(); } });
+});
 document.querySelectorAll('.folder-card[data-cat]:not([data-subcat])').forEach(card => {
   const activate = () => goToCategory(card.dataset.cat);
   card.addEventListener('click', activate);
@@ -1182,36 +1298,44 @@ const totalDocs = allCards.length;
 function normalize(str) { return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 
 function runSearch() {
+  // La recherche n'est disponible qu'une fois un OS choisi
+  if (!state.os) { searchInput.value = ''; return; }
+
   const raw = searchInput.value.trim();
   const q = normalize(raw);
   searchWrap.classList.toggle('has-text', raw.length > 0);
 
   if (!q) {
-    // Retour à la navigation par dossiers, sans re-render de niveau
-    allCards.forEach(c => c.classList.remove('card-hidden'));
+    hideAllLevels();
     emptyState.classList.remove('show');
     searchMeta.innerHTML = '';
-    if (!state.cat && !state.subcat) { statsBlock.style.display = 'flex'; }
-    hideAllLevels();
-    if (state.subcat) { document.querySelector('.subcat-block[data-cat="'+state.cat+'"][data-subcat="'+state.subcat+'"]').classList.add('active'); }
-    else if (state.cat) { document.getElementById('cat-'+state.cat).classList.add('active'); }
-    else { levelCategories.classList.add('active'); }
+    if (state.subcat) {
+      const block = document.querySelector('.subcat-block[data-cat="'+state.cat+'"][data-subcat="'+state.subcat+'"]');
+      block.classList.add('active');
+      block.querySelectorAll('.fc').forEach(fc => fc.classList.toggle('card-hidden', !matchesOS(fc, state.os)));
+    } else if (state.cat) {
+      document.getElementById('cat-'+state.cat).classList.add('active');
+    } else {
+      levelCategories.classList.add('active');
+    }
     closeOpenCard();
     return;
   }
 
-  // Mode recherche globale : on affiche tous les blocs de documents et on filtre
+  // Mode recherche : sur tous les documents compatibles avec l'OS choisi
   hideAllLevels();
   subcatBlocks.forEach(b => b.classList.add('active'));
   statsBlock.style.display = 'none';
 
   let visibleCount = 0;
+  const osDocsTotal = countForOS(document, state.os);
   subcatBlocks.forEach(block => {
     let blockHasVisible = false;
     block.querySelectorAll('.fc').forEach(card => {
       const title = normalize(card.querySelector('.cl').textContent);
       const searchData = normalize(card.dataset.search || '');
-      const match = title.includes(q) || searchData.includes(q);
+      const textMatch = title.includes(q) || searchData.includes(q);
+      const match = textMatch && matchesOS(card, state.os);
       card.classList.toggle('card-hidden', !match);
       if (match) { blockHasVisible = true; visibleCount++; }
     });
@@ -1221,7 +1345,7 @@ function runSearch() {
   closeOpenCard();
   emptyState.classList.toggle('show', visibleCount === 0);
   searchMeta.innerHTML = visibleCount > 0
-    ? `<strong>${visibleCount}</strong> document${visibleCount > 1 ? 's' : ''} sur ${totalDocs}`
+    ? `<strong>${visibleCount}</strong> document${visibleCount > 1 ? 's' : ''} sur ${osDocsTotal}`
     : '';
 }
 
@@ -1235,6 +1359,8 @@ document.addEventListener('keydown', e => {
 });
 
 // Init
+searchWrap.style.display = 'none';
+updateOSCounts();
 renderBreadcrumb();
 </script>
 </body>
